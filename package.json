@@ -1,0 +1,17 @@
+{
+  "name": "ums",
+  "version": "1.0.0",
+  "description": "User Management System",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --open",
+    "build": "vite build",
+    "prod": "vite preview"
+  },
+  "author": "Asfaq Moideen",
+  "license": "ISC",
+  "dependencies": {
+    "highcharts": "^11.4.8",
+    "vite": "^5.4.11"
+  }
+}

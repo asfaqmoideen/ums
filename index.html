@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Directory</title>
+    <script src="/src/js/directoryController.js"></script>
+    <link rel="stylesheet" href="/src/css/user.css">
+</head>
+<body>
+    <header>
+        <h1>User Directory</h1>
+    </header>
+    <main>
+        <aside class="sidebar">
+            <form id="search-sort" >
+                <label for="searchbox">Search Users</label>
+                <input type="text" id="searchbox" placeholder="search by keyword">
+                <label for="filterselect">Apply Filter</label>
+                <select name="filter" id="filterselect">
+                    <option value="0">-Select Filter-</option>
+                </select>
+                <div class="formgrp">
+                <label for="sortselect">Sort Users</label>
+                <label for="sorttoggle">Ascending</label>
+                <input type="checkbox" id="sorttoggle" checked >
+                </div>
+                <select name="sort" id="sortselect">
+                    <option value="0">-Select Sort</option>
+                </select>
+                <div class="field-container" id="field-container">
+                    <button type="button" id="clearall" class="hidden clear-btn">Clear All</button>
+                    <!-- <div class="selectedfield"><p>Age</p> <button type="button" id="clearfield" class="icon-btn">X</button></div> -->
+                </div>
+                <button type="submit" id="results">Show Results</button>
+            </form>
+        </aside>
+        <div class="container">
+            <div class="headgrp"><h2 id="main-cont-title">All Users</h2></div>
+            <div class="subheadgrp"></div>
+            <div class="tablebody">
+            <table id="users-tb">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="paginate-div" class="paginator">
+                <button type="button" id="first" class="pg-btn">First</button>
+                <button type="button"  id="prev" class="pg-btn">Prev</button>
+                <span id="pagenumber">1</span>
+                <button type="button"  id="next" class="pg-btn">Next</button>
+                <button type="button" id="last" class="pg-btn">Last</button>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
