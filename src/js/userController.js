@@ -1,3 +1,4 @@
+"use strict"
 document.addEventListener('DOMContentLoaded', () => {
     const uiCon = new UIController();
     const directCon = new DirectoryController(uiCon);
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     searchForm.reset();
     directCon.displayAllUsers();
     clearResults.classList.add("hidden");
-})
+    });
 
    const nameSearch = document.getElementById("searchbox");
    nameSearch.addEventListener("keyup",()=>{
@@ -224,8 +225,7 @@ class UIController {
             const row = document.createElement('tr');
                 for(let key in user){
                     if(this.includesTableHeading(key)){
-                        const cell = document.createElement('td');
-                        cell.textContent = user[key];
+                        const cell = this.createUserCells(key, user);
                         row.appendChild(cell);
                     }
                 }
@@ -242,6 +242,20 @@ class UIController {
         });
 
         usersTable.appendChild(domFrag);
+    }
+
+    createUserCells(key, user) {
+        const cell = document.createElement('td');
+        if (key == "gender") {
+            cell.textContent = user[key][0].toUpperCase();
+        }
+        else {
+            cell.textContent = user[key];
+            if (key == "role") {
+                cell.classList.add("role", `${key}`);
+            }
+        }
+        return cell;
     }
 
     async tryDeletingUser(user) {
@@ -264,9 +278,6 @@ class UIController {
         );
     }
 
-    
-
-    
     
     createButton(textContent){
         const btn = document.createElement('button');

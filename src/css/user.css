@@ -5,9 +5,45 @@
 
 body{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 100vh;
-    width: 100vw;
+}
+
+.aside{
+    width: 12rem;
+    background : linear-gradient(to left, #48c6ef 0%, #6f86d6 100%);
+    display: flex;
+    color: white;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    margin: 0;
+}
+
+.sideheader{
+    margin-top: 1rem;
+}
+.aside ul{
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+.aside li{
+    text-align: center;
+    text-decoration: none;
+    padding: 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.aside li:hover{
+    background-color: black;
+}
+
+.main-content{
+    flex: 1 ;
+    display: flex;
+    flex-direction: column;
 }
 
 main{
@@ -19,11 +55,18 @@ main{
     flex:1;
 }
 
-header{
+header, footer{
     display: flex;
     justify-content: space-between;
-    background : linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
     padding: 1rem;
+    background : linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
+}
+
+footer{
+    padding: .5rem;
+    display: flex;
+    justify-content: space-around;
+    font-style: italic;
 }
 
 header h1{
@@ -57,6 +100,7 @@ header h1{
     padding: .5rem;
     border-radius: .5rem;
     border: none;
+    cursor: pointer;
 }
 
 
@@ -79,7 +123,7 @@ table thead{
 } 
 
 .tablebody{
-    height: 400px;
+    height: 380px;
     overflow-y: auto;
     margin: 1rem;
 }
@@ -109,4 +153,11 @@ table thead{
     position: absolute;
     top:40%;
     left:40%;
+}
+
+.role{
+    background-color: #ddd;
+}
+.admin{
+    color: red;
 }

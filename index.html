@@ -3,55 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Directory</title>
+    <title>User Management</title>
     <script src="/src/js/userController.js"></script>
     <link rel="stylesheet" href="/src/css/user.css">
 </head>
 <body>
-    <header>
-        <h1>User Directory</h1>
-        <input type="text" id="searchbox" placeholder="Search users by name">
-    </header>
-    <main>
-        <div class="container">
-            <div class="headgrp">
-                <h2 id="main-cont-title">All Users</h2>
-                <p id="messagep"></p>
-                <button type="button" id="applyFilter">Apply Filter</button>
-            </div>
-            <div class="tablebody">
-            <table id="users-tb">
-                    <thead></thead>
-                    <tbody></tbody>
-            </table>
-            </div>
+    <aside class="aside">
+        <div class="sideheader">
+            <h1>Main Menu</h1>
         </div>
-        <aside class="sidebar hidden" id="sidemenu">
-            <form id="searchsort">
-                <label for="filterselect">Apply Filter</label>
-                <select name="filter" id="filterselect">
-                    <option value="0">-Select Filter-</option>
-                </select>
-                <input type="text" id="search" placeholder="filter by keyword">
-                <div class="formgroup">
-                <label for="sortselect">Sort Users</label>
-                <label for="sorttoggle">Ascending</label>
-                <input type="checkbox" id="sorttoggle" checked >
+        <ul>
+            <li>Users Management</li>
+            <li>Todo</li>
+            <li>Social Seed</li>
+            <li>Profile</li>
+        </ul>
+    </aside>
+    <div class="main-content">
+        <header>
+            <h1>User Management</h1>
+            <input type="text" id="searchbox" placeholder="Search users by name">
+        </header>
+        <main>
+            <div class="container">
+                <div class="headgrp">
+                    <h2 id="main-cont-title">All Users</h2>
+                    <p id="messagep"></p>
+                    <button type="button" id="applyFilter">Apply Filter</button>
                 </div>
-                <select name="sort" id="sortselect">
-                    <option value="0">-Select Sort</option>
-                </select>
-                <p id="errorp" class="error"></p>
-                <button type="submit" id="results">Show Results</button>
-                <button type="button" id="clearall" class="hidden clear-btn">Clear Results</button>
-            </form>
-        </aside>
-        <div class="container-confirmation hidden" id="confirmation">
-            <p id="confirm-title"></p>
-            <div class="btn-wrap">  
-            <button type="button" id="yesbtn" >Yes</button>
-            <button type="button" id= "nobtn" >No</button></div>    
-        </div>
-    </main>
+                <div class="tablebody">
+                <table id="users-tb">
+                        <thead></thead>
+                        <tbody></tbody>
+                </table>
+                </div>
+            </div>
+            <div class="sidebar hidden" id="sidemenu">
+                <form id="searchsort">
+                    <label for="filterselect">Apply Filter</label>
+                    <select name="filter" id="filterselect">
+                        <option value="0">-Select Filter-</option>
+                    </select>
+                    <input type="text" id="search" placeholder="filter by keyword">
+                    <div class="formgroup">
+                    <label for="sortselect">Sort Users</label>
+                    <label for="sorttoggle">Ascending</label>
+                    <input type="checkbox" id="sorttoggle" checked >
+                    </div>
+                    <select name="sort" id="sortselect">
+                        <option value="0">-Select Sort</option>
+                    </select>
+                    <p id="errorp" class="error"></p>
+                    <button type="submit" id="results">Show Results</button>
+                    <button type="button" id="clearall" class="hidden clear-btn">Clear Results</button>
+                </form>
+            </div>
+            <div class="container-confirmation hidden" id="confirmation">
+                <p id="confirm-title"></p>
+                <div class="btn-wrap">  
+                <button type="button" id="yesbtn" >Yes</button>
+                <button type="button" id= "nobtn" >No</button></div>    
+            </div>
+        </main>
+        <footer>
+            <p>Copyrights @ User Management System 2025</p>
+        </footer>
+    </div>
 </body>
 </html>
