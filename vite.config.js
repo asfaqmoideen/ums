@@ -6,6 +6,6 @@ export default defineConfig({
     outDir: '../dist',
   },
   server: {
-    port: 6000, 
+    port: 6001, 
   }
 });
