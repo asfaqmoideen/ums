@@ -208,6 +208,7 @@ class UIController {
         const tableHead = document.querySelector("#users-tb thead");
         tableHead.textContent = "";
         const row = document.createElement("tr");
+        row.appendChild(this.createCheckBox());
         this.tableHeadings.forEach(heading =>{
             const td = document.createElement('td');
             td.textContent = Object.values(heading);
@@ -223,6 +224,7 @@ class UIController {
 
         users.forEach(user => {
             const row = document.createElement('tr');
+            row.appendChild(this.createCheckBox(user))
                 for(let key in user){
                     if(this.includesTableHeading(key)){
                         row.appendChild(this.createUserCells(key, user));
@@ -284,6 +286,14 @@ class UIController {
         btn.className = "icon-btn";
         btn.textContent = textContent;
         return btn;
+    }
+
+    createCheckBox(user){
+        const cell = document.createElement("td");
+        const btn = document.createElement("input");
+        btn.type = "checkbox";
+        cell.appendChild(btn);
+        return cell;
     }
     
     getUserConfirmation(context) {
