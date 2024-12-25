@@ -225,8 +225,7 @@ class UIController {
             const row = document.createElement('tr');
                 for(let key in user){
                     if(this.includesTableHeading(key)){
-                        const cell = this.createUserCells(key, user);
-                        row.appendChild(cell);
+                        row.appendChild(this.createUserCells(key, user));
                     }
                 }
                 const butcell = document.createElement("td");
@@ -252,7 +251,8 @@ class UIController {
         else {
             cell.textContent = user[key];
             if (key == "role") {
-                cell.classList.add("role", `${key}`);
+                cell.classList.add("role", `${user[key]}`);
+                console.log(cell.classList);
             }
         }
         return cell;

@@ -123,7 +123,7 @@ table thead{
 } 
 
 .tablebody{
-    height: 380px;
+    height: calc(100vh - 12rem);
     overflow-y: auto;
     margin: 1rem;
 }
@@ -155,9 +155,12 @@ table thead{
     left:40%;
 }
 
-.role{
-    background-color: #ddd;
-}
 .admin{
     color: red;
+}
+.moderator{
+    color: green;
+}
+.user{
+    color: #6f86d6;
 }
