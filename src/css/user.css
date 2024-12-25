@@ -109,7 +109,6 @@ table {
 .table-container {
   height: calc(100vh - 11rem);
   overflow-y: auto;
-  text-align: center;
 }
 
 table thead {
@@ -159,6 +158,18 @@ p {
   display: none;
 }
 .userImage {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 2rem;
+  width: 2rem;
+}
+.superCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.userEmail {
+  font-size: small;
+  opacity: 0.5;
+}
+.nameEmail {
+  text-align: start;
 }

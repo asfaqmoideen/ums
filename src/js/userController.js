@@ -265,22 +265,33 @@ class UIController {
   createSuperCell() {
     const cell = document.createElement("td");
     const div = document.createElement("div");
-    const image = document.createElement("img");
-    image.src = this.superKeyValues[3];
-    image.className = "userImage";
-    div.appendChild(image);
+    div.className = "superCell";
+    div.appendChild(this.createUserImage());
+    div.appendChild(this.createNameEmailDiv());
+    cell.appendChild(div);
+    this.superKeyValues = [];
+    return cell;
+  }
 
-    const name = document.createElement("h6");
+  createNameEmailDiv() {
+    const nameEmail = document.createElement("div");
+    nameEmail.className = "nameEmail";
+    const name = document.createElement("p");
     name.textContent = `${this.superKeyValues[0]} ${this.superKeyValues[1]}`;
-    div.appendChild(name);
+    nameEmail.appendChild(name);
 
     const email = document.createElement("p");
     email.textContent = this.superKeyValues[2];
     email.className = "userEmail";
-    div.appendChild(email);
-    cell.appendChild(div);
-    this.superKeyValues = [];
-    return cell;
+    nameEmail.appendChild(email);
+    return nameEmail;
+  }
+
+  createUserImage() {
+    const image = document.createElement("img");
+    image.src = this.superKeyValues[3];
+    image.className = "userImage";
+    return image;
   }
 
   async tryDeletingUser(user) {
