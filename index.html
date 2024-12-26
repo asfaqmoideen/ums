@@ -55,12 +55,21 @@
             <h3 id="main-cont-title">All Users</h3>
             <p id="messagep"></p>
             <div class="btngroup">
-              <button type="button" class="icon-btn" id="applyFilter">
-                <i class="fa-solid fa-filter"></i>
-              </button>
-              <button type="button" id="addUser" class="icon-btn">
-                <i class="fa-solid fa-user-plus"></i>
-              </button>
+              <button
+                type="button"
+                id="clearall"
+                class="icon-btn clear-btn fa-solid fa-rotate-right hidden"
+              ></button>
+              <button
+                type="button"
+                class="icon-btn fa-solid fa-sliders"
+                id="applyFilter"
+              ></button>
+              <button
+                type="button"
+                id="addUser"
+                class="icon-btn fa-solid fa-user-plus"
+              ></button>
             </div>
           </div>
           <div class="table-responsive table-container">
@@ -83,20 +92,9 @@
               <option value="0">-Select Filter-</option>
             </select>
             <input type="text" id="search" placeholder="filter by keyword" />
-            <div class="formgroup">
-              <label for="sortselect">Sort Users</label>
-              <label for="sorttoggle">Ascending</label>
-              <input type="checkbox" id="sorttoggle" checked />
-            </div>
-            <select name="sort" id="sortselect">
-              <option value="0">-Select Sort</option>
-            </select>
             <p id="errorp" class="error"></p>
             <button type="submit" class="btn-primary" id="results">
               Show Results
-            </button>
-            <button type="button" id="clearall" class="hidden clear-btn">
-              Clear Results
             </button>
           </form>
         </div>

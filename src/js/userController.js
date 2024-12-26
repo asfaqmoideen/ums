@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     directCon.searchSortUser(searchForm);
     clearResults.classList.remove("hidden");
+    sideMenu.classList.add("hidden");
   });
 
   clearResults.addEventListener("click", () => {
@@ -44,32 +45,21 @@ class DirectoryController {
       { gender: "Gender" },
       { bloodGroup: "Blood Group" },
     ];
-    this.sortTags = [
-      { id: "Id" },
-      { firstName: "First Name" },
-      { lastName: "Last Name" },
-      { age: "Age" },
-      { birthDate: "Date of Birth" },
-      { height: "Height" },
-      { weight: "Weight" },
-    ];
     this.uiCon = uiCon;
     this.userApi = new APIService();
   }
 
   updateInitailValues() {
     this.uiCon.setDropDown(this.filterTags, "filter");
-    this.uiCon.setDropDown(this.sortTags, "sort");
     this.uiCon.setTableHeadings();
   }
 
   async searchSortUser(form) {
-    const sortValue = form.sortselect.value;
     const filterSelect = form.filterselect.value;
     const searchBox = form.search.value;
 
     try {
-      if (sortValue == 0 && filterSelect == 0 && !searchBox) {
+      if (filterSelect == 0 && !searchBox) {
         throw new Error("No Feilds were selected");
       }
 
@@ -82,13 +72,6 @@ class DirectoryController {
           UIController.displayMessage("No results found", "message");
         }
         this.uiCon.populateUsersTable(filteredUsers.users);
-        return;
-      }
-
-      if (sortValue != 0) {
-        const order = form.sorttoggle.checked ? "asc" : "desc";
-        const sortedUsers = await this.userApi.sortUsers(sortValue, order);
-        this.uiCon.populateUsersTable(sortedUsers.users);
         return;
       }
     } catch (e) {
@@ -116,11 +99,6 @@ class DirectoryController {
     } catch (e) {
       UIController.displayMessage(e.message, "message");
     }
-  }
-  async trySortingData(sortValue) {
-    const sortedUsers = await this.userApi.sortUsers(sortValue, "asc");
-    console.log(sortedUsers.users);
-    this.uiCon.populateUsersTable(sortedUsers.users);
   }
 }
 
@@ -192,7 +170,7 @@ class UIController {
     this.superKeys = ["firstName", "lastName", "email", "image"];
     this.superKeyValues = [];
     this.userApi = new APIService();
-    this.directCon = new DirectoryController();
+    this.sortBtnState = 0;
   }
 
   setDropDown(tags, type) {
@@ -214,15 +192,32 @@ class UIController {
       const td = document.createElement("td");
       td.textContent = Object.values(heading);
       td.onclick = async () => {
-        await this.directCon.trySortingData(Object.keys(heading)[0]); ///
+        await this.trySortingData(Object.keys(heading)[0]);
       };
       row.appendChild(td);
     });
     tableHead.appendChild(row);
   }
 
+  async trySortingData(sortValue) {
+    if (this.sortBtnState >= 2) {
+      this.sortBtnState = 0;
+      this.populateUsersTable();
+    }
+    if (sortValue == "name") {
+      sortValue = "firstName";
+    }
+    const sortBtnValues = ["asc", "desc"];
+    console.log(sortBtnValues[this.sortBtnState]);
+    const sortedUsers = await this.userApi.sortUsers(
+      sortValue,
+      sortBtnValues[this.sortBtnState]
+    );
+    this.populateUsersTable(sortedUsers.users);
+    this.sortBtnState++;
+  }
+
   populateUsersTable(users) {
-    console.log(users);
     const usersTable = document.querySelector("#users-tb tbody");
     usersTable.textContent = " ";
     const domFrag = document.createDocumentFragment();
@@ -320,8 +315,18 @@ class UIController {
     const actionCell = document.createElement("td");
     const actionDiv = document.createElement("div");
     actionDiv.className = "btn-wrap";
-    const editBtn = this.createButton(["icon-btn", "fa-solid", "fa-user-pen"]);
-    const delBtn = this.createButton(["icon-btn", "fa-solid", "fa-trash-can"]);
+    const editBtn = this.createButton([
+      "icon-btn",
+      "fa-solid",
+      "fa-user-pen",
+      "edit",
+    ]);
+    const delBtn = this.createButton([
+      "icon-btn",
+      "fa-solid",
+      "fa-trash-can",
+      "del",
+    ]);
     actionDiv.appendChild(editBtn);
     actionDiv.appendChild(delBtn);
     delBtn.onclick = async () => {
@@ -339,8 +344,7 @@ class UIController {
 
   createButton(classList) {
     const btn = document.createElement("button");
-    btn.classList.add(classList[0], classList[1], classList[2]);
-    console.log(btn.classList);
+    btn.classList.add(classList[0], classList[1], classList[2], classList[3]);
     return btn;
   }
 
