@@ -10,6 +10,13 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -48,11 +55,11 @@
             <h3 id="main-cont-title">All Users</h3>
             <p id="messagep"></p>
             <div class="btngroup">
-              <button type="button" class="btn-secondary" id="applyFilter">
-                Apply Filter
+              <button type="button" class="icon-btn" id="applyFilter">
+                <i class="fa-solid fa-filter"></i>
               </button>
-              <button type="button" class="btn-primary" id="addUser">
-                + Add New User
+              <button type="button" id="addUser" class="icon-btn">
+                <i class="fa-solid fa-user-plus"></i>
               </button>
             </div>
           </div>
@@ -64,6 +71,12 @@
           </div>
         </div>
         <div class="sidebar hidden" id="sidemenu">
+          <div class="headgrp">
+            <h5>Filter Options</h5>
+            <button type="button" id="filterclosebtn" class="icon-btn">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
           <form id="searchsort">
             <label for="filterselect">Apply Filter</label>
             <select name="filter" id="filterselect">

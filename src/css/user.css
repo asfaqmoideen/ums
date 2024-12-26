@@ -2,10 +2,11 @@ body {
   display: flex;
   flex-direction: row;
   height: 100vh;
+  font-size: 1rem;
 }
 
 .aside {
-  width: 13rem;
+  width: 8rem;
   background: linear-gradient(to left, #48c6ef 0%, #6f86d6 100%);
   display: flex;
   color: white;
@@ -49,13 +50,18 @@ main {
 .container {
   flex: 1;
 }
-
+.container h3 {
+  font-size: 1.5rem;
+}
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
   padding: 0.5rem;
+}
+header h1 {
+  color: #fff;
 }
 
 footer {
@@ -64,10 +70,6 @@ footer {
   justify-content: space-around;
   font-style: italic;
   padding: 0.2rem;
-}
-
-header h1 {
-  color: #fff;
 }
 
 .headgrp {
@@ -89,6 +91,10 @@ header h1 {
 .sidebar {
   width: 20%;
   padding: 1rem;
+  position: absolute;
+  top: 15%;
+  right: 40%;
+  border-radius: 1rem;
   background: linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
 }
 
@@ -104,6 +110,7 @@ select {
 table {
   width: 100%;
   border-collapse: collapse;
+  text-align: center;
 }
 
 .table-container {
@@ -113,13 +120,13 @@ table {
 
 table thead {
   background: linear-gradient(to right, #48c6ef 0%, #8da2f0 100%);
-  font-weight: bold;
   color: white;
+  cursor: pointer;
 }
 
 .sidebar form {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   flex-direction: column;
 }
 
@@ -167,9 +174,18 @@ p {
   gap: 0.5rem;
 }
 .userEmail {
-  font-size: small;
+  font-size: 0.8rem;
   opacity: 0.5;
 }
 .nameEmail {
   text-align: start;
+}
+.selected {
+  background-color: rgb(133, 216, 133);
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: inherit;
 }

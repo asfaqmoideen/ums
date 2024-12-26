@@ -28,10 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const applyFilter = document.getElementById("applyFilter");
   applyFilter.addEventListener("click", () => {
-    applyFilter.textContent == "Close"
-      ? (applyFilter.textContent = "Apply Filter")
-      : (applyFilter.textContent = "Close");
-    sideMenu.classList.toggle("hidden");
+    sideMenu.classList.remove("hidden");
+  });
+
+  document.getElementById("filterclosebtn").addEventListener("click", () => {
+    sideMenu.classList.add("hidden");
   });
 });
 
@@ -87,9 +88,6 @@ class DirectoryController {
       if (sortValue != 0) {
         const order = form.sorttoggle.checked ? "asc" : "desc";
         const sortedUsers = await this.userApi.sortUsers(sortValue, order);
-        if (sortedUsers.total === 0) {
-          UIController.displayMessage("No results found", "message");
-        }
         this.uiCon.populateUsersTable(sortedUsers.users);
         return;
       }
@@ -118,6 +116,11 @@ class DirectoryController {
     } catch (e) {
       UIController.displayMessage(e.message, "message");
     }
+  }
+  async trySortingData(sortValue) {
+    const sortedUsers = await this.userApi.sortUsers(sortValue, "asc");
+    console.log(sortedUsers.users);
+    this.uiCon.populateUsersTable(sortedUsers.users);
   }
 }
 
@@ -189,6 +192,7 @@ class UIController {
     this.superKeys = ["firstName", "lastName", "email", "image"];
     this.superKeyValues = [];
     this.userApi = new APIService();
+    this.directCon = new DirectoryController();
   }
 
   setDropDown(tags, type) {
@@ -209,19 +213,23 @@ class UIController {
     this.tableHeadings.forEach((heading) => {
       const td = document.createElement("td");
       td.textContent = Object.values(heading);
+      td.onclick = async () => {
+        await this.directCon.trySortingData(Object.keys(heading)[0]); ///
+      };
       row.appendChild(td);
     });
     tableHead.appendChild(row);
   }
 
   populateUsersTable(users) {
+    console.log(users);
     const usersTable = document.querySelector("#users-tb tbody");
     usersTable.textContent = " ";
     const domFrag = document.createDocumentFragment();
 
     users.forEach((user) => {
       const row = document.createElement("tr");
-      row.appendChild(this.createCheckBox(user));
+      row.appendChild(this.createCheckBox(row));
       for (let key in user) {
         if (this.superKeys.includes(key)) {
           this.superKeyValues.push(user[key]);
@@ -234,15 +242,7 @@ class UIController {
           row.appendChild(this.createUserCells(key, user));
         }
       }
-      const butcell = document.createElement("td");
-      const delBtn = this.createButton(`Remove`);
-      butcell.appendChild(delBtn);
-      row.appendChild(butcell);
-      delBtn.onclick = async () => {
-        if (await this.tryDeletingUser(user)) {
-          usersTable.removeChild(row);
-        }
-      };
+      row.appendChild(this.createActionCell(row, user, usersTable));
       domFrag.appendChild(row);
     });
 
@@ -316,16 +316,40 @@ class UIController {
     );
   }
 
-  createButton(textContent) {
+  createActionCell(row, user, usersTable) {
+    const actionCell = document.createElement("td");
+    const actionDiv = document.createElement("div");
+    actionDiv.className = "btn-wrap";
+    const editBtn = this.createButton(["icon-btn", "fa-solid", "fa-user-pen"]);
+    const delBtn = this.createButton(["icon-btn", "fa-solid", "fa-trash-can"]);
+    actionDiv.appendChild(editBtn);
+    actionDiv.appendChild(delBtn);
+    delBtn.onclick = async () => {
+      if (await this.tryDeletingUser(user)) {
+        usersTable.removeChild(row);
+      }
+    };
+    editBtn.onclick = async () => {
+      if (await this.tryDeletingUser()) {
+      }
+    };
+    actionCell.appendChild(actionDiv);
+    return actionCell;
+  }
+
+  createButton(classList) {
     const btn = document.createElement("button");
-    btn.className = "icon-btn";
-    btn.textContent = textContent;
+    btn.classList.add(classList[0], classList[1], classList[2]);
+    console.log(btn.classList);
     return btn;
   }
 
-  createCheckBox(user) {
+  createCheckBox(row) {
     const cell = document.createElement("td");
     const btn = document.createElement("input");
+    btn.addEventListener("click", () => {
+      row.classList.toggle("selected");
+    });
     btn.type = "checkbox";
     cell.appendChild(btn);
     return cell;
