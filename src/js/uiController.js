@@ -1,22 +1,39 @@
 export class UIController {
   constructor(directCon) {
     this.directCon = directCon;
-    this.tableService = new TableService();
-    this.filterTags = [
-      { role: "Role" },
-      { age: "Age" },
-      { gender: "Gender" },
-      { bloodGroup: "Blood Group" },
+    this.tableService = new TableService(this);
+    this.filterRoles = [
+      { admin: "Admin" },
+      { moderator: "Moderator" },
+      { user: "User" },
     ];
+    this.filterBloodGroup = [
+      { admin: "Admin" },
+      { moderator: "Moderator" },
+      { user: "User" },
+    ];
+    this.filterBloodGroups = [
+      { "A+": "A+" },
+      { "A-": "A-" },
+      { "B+": "B+" },
+      { "B-": "B-" },
+      { "AB+": "AB+" },
+      { "AB-": "AB-" },
+      { "O+": "O+" },
+      { "O-": "O-" },
+    ];
+    this.filterGender = [{ male: "Male" }, { female: "Female" }];
   }
 
   populateIniatialValues() {
-    this.setDropDown(this.filterTags, "filter");
+    this.setDropDown(this.filterRoles, "role");
+    this.setDropDown(this.filterBloodGroups, "bloodgroup");
+    this.setDropDown(this.filterGender, "gender");
     this.tableService.setTableHeadings();
   }
 
   setDropDown(tags, type) {
-    const dropDown = document.getElementById(`${type}select`);
+    const dropDown = document.getElementById(`${type}filter`);
     tags.forEach((tag) => {
       const option = document.createElement("option");
       option.value = Object.keys(tag)[0];
@@ -85,7 +102,7 @@ export class UIController {
 }
 
 class TableService {
-  constructor() {
+  constructor(uiCon) {
     this.tableHeadings = [
       { name: "Name" },
       { age: "Age" },
@@ -99,17 +116,20 @@ class TableService {
     ];
     this.superKeys = ["firstName", "lastName", "email", "image"];
     this.superKeyValues = [];
+    this.uiCon = uiCon;
   }
   setTableHeadings() {
     const tableHead = document.querySelector("#users-tb thead");
     tableHead.textContent = "";
     const row = document.createElement("tr");
+
     row.appendChild(this.createCheckBox());
+
     this.tableHeadings.forEach((heading) => {
       const td = document.createElement("td");
       td.textContent = Object.values(heading);
       td.onclick = async () => {
-        await this.directCon.trySortingData(Object.keys(heading)[0]);
+        await this.uiCon.directCon.trySortingData(Object.keys(heading)[0]);
       };
       row.appendChild(td);
     });

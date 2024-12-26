@@ -9,17 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
   directCon.displayAllUsers();
 
   const clearResults = document.getElementById("clearall");
-  const searchForm = document.getElementById("searchsort");
+  const filterForm = document.getElementById("filterform");
   const sideMenu = document.getElementById("sidemenu");
-  searchForm.addEventListener("submit", (event) => {
+  filterForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    directCon.searchSortUser(searchForm);
+    directCon.filterUsers(filterForm);
     clearResults.classList.remove("hidden");
     sideMenu.classList.add("hidden");
   });
 
   clearResults.addEventListener("click", () => {
-    searchForm.reset();
+    filterForm.reset();
     directCon.displayAllUsers();
     clearResults.classList.add("hidden");
   });
@@ -50,19 +50,58 @@ class DirectoryController {
     this.uiCon.populateIniatialValues();
   }
 
-  async searchSortUser(form) {
-    const filterSelect = form.filterselect.value;
-    const searchBox = form.search.value;
+  async filterUsers(form) {
+    const roleFilter = form.rolefilter.value;
+    const ageFilter = form.agefilter.value;
+    const genderFilter = form.genderfilter.value;
+    const bloodGroupFilter = form.bloodgroupfilter.value;
+
+    console.log(roleFilter, ageFilter, genderFilter, bloodGroupFilter);
 
     try {
-      if (filterSelect == 0 && !searchBox) {
+      if (
+        roleFilter == 0 &&
+        ageFilter == 20 &&
+        genderFilter == 0 &&
+        bloodGroupFilter == 0
+      ) {
         throw new Error("No Feilds were selected");
       }
 
-      if (filterSelect != 0 && searchBox) {
+      if (roleFilter != 0) {
         const filteredUsers = await this.userApi.filterUsers(
-          filterSelect,
-          searchBox
+          "role",
+          roleFilter
+        );
+        if (filteredUsers.total === 0) {
+          UIController.displayMessage("No results found", "message");
+        }
+        this.uiCon.populateUsersTable(filteredUsers.users);
+        return;
+      }
+      if (ageFilter > 20) {
+        const filteredUsers = await this.userApi.filterUsers("age", ageFilter);
+        if (filteredUsers.total === 0) {
+          UIController.displayMessage("No results found", "message");
+        }
+        this.uiCon.populateUsersTable(filteredUsers.users);
+        return;
+      }
+      if (bloodGroupFilter != 0) {
+        const filteredUsers = await this.userApi.filterUsers(
+          "bloodGroup",
+          bloodGroupFilter
+        );
+        if (filteredUsers.total === 0) {
+          UIController.displayMessage("No results found", "message");
+        }
+        this.uiCon.populateUsersTable(filteredUsers.users);
+        return;
+      }
+      if (genderFilter != 0) {
+        const filteredUsers = await this.userApi.filterUsers(
+          "gender",
+          genderFilter
         );
         if (filteredUsers.total === 0) {
           UIController.displayMessage("No results found", "message");

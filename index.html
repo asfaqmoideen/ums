@@ -86,12 +86,18 @@
               <i class="fa-solid fa-xmark"></i>
             </button>
           </div>
-          <form id="searchsort">
+          <form id="filterform">
             <label for="filterselect">Apply Filter</label>
-            <select name="filter" id="filterselect">
+            <select id="rolefilter">
               <option value="0">-Select Filter-</option>
             </select>
-            <input type="text" id="search" placeholder="filter by keyword" />
+            <input type="range" min="20" max="60" value="20" id="agefilter" />
+            <select id="bloodgroupfilter">
+              <option value="0">-Select Filter-</option>
+            </select>
+            <select id="genderfilter">
+              <option value="0">-Select Filter-</option>
+            </select>
             <p id="errorp" class="error"></p>
             <button type="submit" class="btn-primary" id="results">
               Show Results
