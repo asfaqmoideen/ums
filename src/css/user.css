@@ -88,12 +88,11 @@ footer {
   color: red;
 }
 
-.sidebar {
-  width: 20%;
+.filterbar {
   padding: 1rem;
   position: absolute;
-  top: 15%;
-  right: 40%;
+  top: 30%;
+  left: 35%;
   border-radius: 1rem;
   background: aliceblue;
 }
@@ -114,8 +113,9 @@ table {
 }
 
 .table-container {
-  height: calc(100vh - 11rem);
+  height: calc(100vh - 12.5rem);
   overflow-y: auto;
+  border-bottom: solid gray 1px;
 }
 
 table thead {
@@ -124,7 +124,7 @@ table thead {
   cursor: pointer;
 }
 
-.sidebar form {
+.filterbar form {
   display: flex;
   gap: 1rem;
   flex-direction: column;
@@ -136,6 +136,9 @@ table thead {
   align-items: center;
   justify-content: space-around;
   flex-wrap: wrap;
+}
+.formgroup {
+  gap: 1rem;
 }
 
 .container-confirmation {

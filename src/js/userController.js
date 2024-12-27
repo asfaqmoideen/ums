@@ -10,12 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const clearResults = document.getElementById("clearall");
   const filterForm = document.getElementById("filterform");
-  const sideMenu = document.getElementById("sidemenu");
+  const filterMenu = document.getElementById("filtermenu");
   filterForm.addEventListener("submit", (event) => {
     event.preventDefault();
     directCon.filterUsers(filterForm);
     clearResults.classList.remove("hidden");
-    sideMenu.classList.add("hidden");
+    filterMenu.classList.add("hidden");
   });
 
   clearResults.addEventListener("click", () => {
@@ -31,11 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const applyFilter = document.getElementById("applyFilter");
   applyFilter.addEventListener("click", () => {
-    sideMenu.classList.remove("hidden");
+    filterMenu.classList.remove("hidden");
   });
 
   document.getElementById("filterclosebtn").addEventListener("click", () => {
-    sideMenu.classList.add("hidden");
+    filterMenu.classList.add("hidden");
+  });
+
+  document.getElementById("agefilter").addEventListener("change", (event) => {
+    document.getElementById("agefilterspan").textContent = event.target.value;
   });
 });
 
@@ -56,8 +60,6 @@ class DirectoryController {
     const genderFilter = form.genderfilter.value;
     const bloodGroupFilter = form.bloodgroupfilter.value;
 
-    console.log(roleFilter, ageFilter, genderFilter, bloodGroupFilter);
-
     try {
       if (
         roleFilter == 0 &&
@@ -76,7 +78,7 @@ class DirectoryController {
         if (filteredUsers.total === 0) {
           UIController.displayMessage("No results found", "message");
         }
-        this.uiCon.populateUsersTable(filteredUsers.users);
+        this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (ageFilter > 20) {
@@ -84,7 +86,7 @@ class DirectoryController {
         if (filteredUsers.total === 0) {
           UIController.displayMessage("No results found", "message");
         }
-        this.uiCon.populateUsersTable(filteredUsers.users);
+        this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (bloodGroupFilter != 0) {
@@ -95,7 +97,7 @@ class DirectoryController {
         if (filteredUsers.total === 0) {
           UIController.displayMessage("No results found", "message");
         }
-        this.uiCon.populateUsersTable(filteredUsers.users);
+        this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (genderFilter != 0) {
@@ -106,7 +108,7 @@ class DirectoryController {
         if (filteredUsers.total === 0) {
           UIController.displayMessage("No results found", "message");
         }
-        this.uiCon.populateUsersTable(filteredUsers.users);
+        this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
     } catch (e) {
@@ -116,11 +118,11 @@ class DirectoryController {
 
   async searchUserByName(name) {
     try {
-      const users = await this.userApi.searchUser(name);
-      if (users.total == 0) {
+      const users = await this.userApi.searchUser(name.trim());
+      if (users.total === 0) {
         UIController.displayMessage("No results found", "message");
       }
-      this.uiCon.populateUsersTable(users.users);
+      this.uiCon.populateUsersTable(users);
       return;
     } catch (e) {
       UIController.displayMessage(e.message, "message");
@@ -128,9 +130,10 @@ class DirectoryController {
   }
 
   async displayAllUsers() {
+    this.uiCon.setResultsHeading("All Users");
     try {
       const allusers = await this.userApi.getAllUsers();
-      this.uiCon.populateUsersTable(allusers.users);
+      this.uiCon.populateUsersTable(allusers);
     } catch (e) {
       UIController.displayMessage(e.message, "message");
     }
@@ -163,12 +166,16 @@ class DirectoryController {
       sortValue = "firstName";
     }
     const sortBtnValues = ["asc", "desc"];
-    console.log(sortBtnValues[this.sortBtnState]);
     const sortedUsers = await this.userApi.sortUsers(
       sortValue,
       sortBtnValues[this.sortBtnState]
     );
-    this.uiCon.populateUsersTable(sortedUsers.users);
+    this.uiCon.setResultsHeading(
+      `Sorted based on ${sortValue} in ${
+        sortBtnValues[this.sortBtnState]
+      } order`
+    );
+    this.uiCon.populateUsersTable(sortedUsers);
     this.sortBtnState++;
   }
 

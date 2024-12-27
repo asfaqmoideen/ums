@@ -2,16 +2,8 @@ export class UIController {
   constructor(directCon) {
     this.directCon = directCon;
     this.tableService = new TableService(this);
-    this.filterRoles = [
-      { admin: "Admin" },
-      { moderator: "Moderator" },
-      { user: "User" },
-    ];
-    this.filterBloodGroup = [
-      { admin: "Admin" },
-      { moderator: "Moderator" },
-      { user: "User" },
-    ];
+    this.paginate = new PaginationController();
+    this.filterRoles = [{ moderator: "Moderator" }, { user: "User" }];
     this.filterBloodGroups = [
       { "A+": "A+" },
       { "A-": "A-" },
@@ -77,12 +69,13 @@ export class UIController {
     }, 3000);
   }
 
-  populateUsersTable(users) {
+  populateUsersTable(usersObj) {
+    this.paginate.setPages(usersObj.total);
     const usersTable = document.querySelector("#users-tb tbody");
     usersTable.textContent = " ";
     const domFrag = document.createDocumentFragment();
 
-    users.forEach((user) => {
+    usersObj.users.forEach((user) => {
       const row = document.createElement("tr");
       row.appendChild(this.tableService.createCheckBox(row));
       this.tableService.populateSuperCell(user, row);
@@ -98,6 +91,10 @@ export class UIController {
     });
 
     usersTable.appendChild(domFrag);
+  }
+
+  setResultsHeading(content) {
+    document.getElementById("main-cont-title").textContent = content;
   }
 }
 
@@ -216,12 +213,12 @@ class TableService {
     actionDiv.appendChild(editBtn);
     actionDiv.appendChild(delBtn);
     delBtn.onclick = async () => {
-      if (await this.directCon.tryDeletingUser(user)) {
+      if (await this.uiCon.directCon.tryDeletingUser(user)) {
         usersTable.removeChild(row);
       }
     };
     editBtn.onclick = async () => {
-      if (await this.directCon.tryEditingUser(user)) {
+      if (await this.uiCon.directCon.tryEditingUser(user)) {
       }
     };
     actionCell.appendChild(actionDiv);
@@ -243,5 +240,53 @@ class TableService {
     btn.type = "checkbox";
     cell.appendChild(btn);
     return cell;
+  }
+}
+
+class PaginationController {
+  constructor() {
+    this.currentPage = 1;
+    this.maxPage = 0;
+    this.usersperpage = 5;
+    this.setEventListeners();
+  }
+
+  setEventListeners() {
+    document.getElementById("first-btn").addEventListener("click", () => {
+      this.currentPage = 1;
+      this.setPageNumber();
+      console.log(this.currentPage);
+    });
+    document.getElementById("next-btn").addEventListener("click", () => {
+      this.currentPage++;
+      this.setPageNumber();
+      console.log(this.currentPage);
+    });
+    document.getElementById("prev-btn").addEventListener("click", () => {
+      this.currentPage--;
+      this.setPageNumber();
+      console.log(this.currentPage);
+    });
+    document.getElementById("last-btn").addEventListener("click", () => {
+      this.currentPage = this.maxPage;
+      this.setPageNumber();
+      console.log(this.currentPage);
+    });
+    document.getElementById("noofusers").addEventListener("change", (event) => {
+      this.usersperpage = event.target.value;
+      console.log(this.usersperpage);
+    });
+  }
+
+  setPages(totalUsers) {
+    this.maxPage = Math.ceil(totalUsers / this.usersperpage);
+  }
+
+  isPaginationRequired() {
+    return this.maxPage > 1;
+  }
+
+  setPageNumber() {
+    document.getElementById("pagenumber").textContent = this.currentPage;
   }
 }

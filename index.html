@@ -60,6 +60,11 @@
                 id="clearall"
                 class="icon-btn clear-btn fa-solid fa-rotate-right hidden"
               ></button>
+              <select id="noofusers">
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
               <button
                 type="button"
                 class="icon-btn fa-solid fa-sliders"
@@ -78,8 +83,31 @@
               <tbody></tbody>
             </table>
           </div>
+          <div id="paginate-div" class="formgroup">
+            <button
+              type="button"
+              id="first-btn"
+              class="icon-btn fa-solid fa-angles-left"
+            ></button>
+            <button
+              type="button"
+              id="prev-btn"
+              class="icon-btn fa-solid fa-angle-left"
+            ></button>
+            <span id="pagenumber">1</span>
+            <button
+              type="button"
+              id="next-btn"
+              class="icon-btn fa-solid fa-angle-right"
+            ></button>
+            <button
+              type="button"
+              id="last-btn"
+              class="icon-btn fa-solid fa-angles-right"
+            ></button>
+          </div>
         </div>
-        <div class="sidebar hidden" id="sidemenu">
+        <div class="filterbar hidden" id="filtermenu">
           <div class="headgrp">
             <h5>Filter Options</h5>
             <button type="button" id="filterclosebtn" class="icon-btn">
@@ -87,17 +115,22 @@
             </button>
           </div>
           <form id="filterform">
-            <label for="filterselect">Apply Filter</label>
-            <select id="rolefilter">
-              <option value="0">-Select Filter-</option>
-            </select>
-            <input type="range" min="20" max="60" value="20" id="agefilter" />
-            <select id="bloodgroupfilter">
-              <option value="0">-Select Filter-</option>
-            </select>
-            <select id="genderfilter">
-              <option value="0">-Select Filter-</option>
-            </select>
+            <div class="formgroup">
+              <label for="agefilter">Select Age</label>
+              <span id="agefilterspan">20</span>
+              <input type="range" min="20" max="60" value="20" id="agefilter" />
+            </div>
+            <div class="formgroup">
+              <select id="rolefilter">
+                <option value="0">-Role-</option>
+              </select>
+              <select id="bloodgroupfilter">
+                <option value="0">-BloodGroup-</option>
+              </select>
+              <select id="genderfilter">
+                <option value="0">-Gender-</option>
+              </select>
+            </div>
             <p id="errorp" class="error"></p>
             <button type="submit" class="btn-primary" id="results">
               Show Results
