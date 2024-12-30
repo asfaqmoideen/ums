@@ -1,112 +1,198 @@
-*{
-    box-sizing: border-box;
-    margin: 0;
+body {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  font-size: 1rem;
 }
 
-body{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
+.aside {
+  width: 8rem;
+  background: linear-gradient(to left, #48c6ef 0%, #6f86d6 100%);
+  display: flex;
+  color: white;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  margin: 0;
 }
 
-main{
-    flex: 1;
-    display: flex;
+.sideheader {
+  margin-top: 1rem;
+}
+.aside ul {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+.aside li {
+  text-align: center;
+  text-decoration: none;
+  padding: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.aside li:hover {
+  background-color: black;
 }
 
-.container{
-    flex:1;
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-header{
-    display: flex;
-    justify-content: space-between;
-    background : linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
-    padding: 1rem;
+main {
+  flex: 1;
+  display: flex;
 }
 
-header h1{
-    color: #fff;
+.container {
+  flex: 1;
+}
+.container h3 {
+  font-size: 1.5rem;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
+  padding: 0.5rem;
+}
+header h1 {
+  color: #fff;
 }
 
-.headgrp{
-    display: flex;
-    padding: .8rem;
-    justify-content: space-between;
-    align-items: center;
+footer {
+  display: flex;
+  background: linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
+  justify-content: space-around;
+  font-style: italic;
+  padding: 0.2rem;
 }
 
-.error{
-    color: red;
+.headgrp {
+  display: flex;
+  padding: 0.8rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-
-.icon-btn{
-    background: none;
-    color: red;
+.error {
+  color: red;
 }
 
-.sidebar{
-    width: 20%;
-    padding: 1rem;
-    background : linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
+.icon-btn {
+  background: none;
+  color: red;
 }
 
- button, input, select{
-    padding: .5rem;
-    border-radius: .5rem;
-    border: none;
+.filterbar {
+  padding: 1rem;
+  position: absolute;
+  top: 30%;
+  left: 35%;
+  border-radius: 1rem;
+  background: aliceblue;
 }
 
+button,
+input,
+select {
+  padding: 0.4rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+}
 
 table {
-    width: 100%;
-    border-collapse: collapse;  
-}
-  
-table thead, table td {
-    padding: .5rem;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-  
-table thead{
-    background : linear-gradient(to right, #48c6ef 0%, #8da2f0 100%);
-    font-weight: bold;
-    color: white;
-} 
-
-.tablebody{
-    height: 400px;
-    overflow-y: auto;
-    margin: 1rem;
+.table-container {
+  height: calc(100vh - 11rem);
+  overflow-y: auto;
 }
 
-.hidden{
-    display: none;
+table thead {
+  background: linear-gradient(to right, #48c6ef 0%, #8da2f0 100%);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.sidebar form{
-    display: flex;
-    gap: 2rem;
-    flex-direction: column;
+.filterbar form {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
 }
 
-.formgroup, .btn-wrap{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-wrap: wrap;
+.formgroup,
+.btn-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.formgroup {
+  gap: 1rem;
 }
 
-.container-confirmation{
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid red;
-    border-radius: 8px;
-    position: absolute;
-    top:40%;
-    left:40%;
+.container-confirmation {
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid red;
+  border-radius: 8px;
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
+
+.admin {
+  color: palevioletred;
+}
+.moderator {
+  color: goldenrod;
+}
+.user {
+  color: #6f86d6;
+}
+
+p {
+  margin: 0;
+}
+.hidden {
+  display: none;
+}
+.userImage {
+  height: 2rem;
+  width: 2rem;
+}
+.superCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.userEmail {
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+.nameEmail {
+  text-align: start;
+}
+.selected {
+  background-color: rgb(133, 216, 133);
+}
+
+.icon-btn {
+  border: none;
+  background: none;
+  color: inherit;
+}
+#noofresults,
+.noofusers {
+  font-size: small;
+  opacity: 0.5;
 }

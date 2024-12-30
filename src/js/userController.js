@@ -1,308 +1,176 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const uiCon = new UIController();
-    const directCon = new DirectoryController(uiCon);
+"use strict";
+import { APIService } from "./apiService";
+import { UIController } from "./uiController";
+import { PaginationController } from "./uiController";
+document.addEventListener("DOMContentLoaded", () => {
+  const directCon = new DirectoryController();
 
-    directCon.updateInitailValues();
-    directCon.displayAllUsers();
+  directCon.updateInitailValues();
+  directCon.displayAllUsers();
 
-    const clearResults = document.getElementById("clearall");
-    const searchForm = document.getElementById("searchsort");
-    const sideMenu = document.getElementById("sidemenu");
-    searchForm.addEventListener("submit",(event)=> {
+  const clearResults = document.getElementById("clearall");
+  const filterForm = document.getElementById("filterform");
+  const filterMenu = document.getElementById("filtermenu");
+  filterForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    directCon.searchSortUser(searchForm);
+    directCon.filterUsers(filterForm);
     clearResults.classList.remove("hidden");
+    filterMenu.classList.add("hidden");
+  });
 
-    });
-
-    clearResults.addEventListener("click",()=> {
-    searchForm.reset();
+  clearResults.addEventListener("click", () => {
+    filterForm.reset();
     directCon.displayAllUsers();
     clearResults.classList.add("hidden");
-})
+  });
 
-   const nameSearch = document.getElementById("searchbox");
-   nameSearch.addEventListener("keyup",()=>{
-        directCon.searchUserByName(nameSearch.value);
-   });
+  const nameSearch = document.getElementById("searchbox");
+  nameSearch.addEventListener("keyup", () => {
+    directCon.searchUserByName(nameSearch.value);
+  });
 
-   const applyFilter = document.getElementById("applyFilter");
-   applyFilter.addEventListener("click",()=>{
-    applyFilter.textContent == "Close" ? applyFilter.textContent = "Apply Filter" : applyFilter.textContent = "Close" ;
-    sideMenu.classList.toggle("hidden");
-   })
-})
+  const applyFilter = document.getElementById("applyFilter");
+  applyFilter.addEventListener("click", () => {
+    filterMenu.classList.remove("hidden");
+  });
+
+  document.getElementById("filterclosebtn").addEventListener("click", () => {
+    filterMenu.classList.add("hidden");
+  });
+
+  document.getElementById("agefilter").addEventListener("change", (event) => {
+    document.getElementById("agefilterspan").textContent = event.target.value;
+  });
+});
 
 class DirectoryController {
-    constructor(uiCon){
-        this.filterTags = [ 
-            {role:"Role"}, 
-            {age:'Age'},
-            {gender:'Gender'},
-            {bloodGroup : "Blood Group"},
-        ];
-        this.sortTags = [ 
-            {id :"Id"}, 
-            {firstName :"First Name"}, 
-            {lastName:"Last Name"},
-            {age:'Age'},
-            {birthDate:'Date of Birth'},
-            {height : 'Height'},
-            {weight : 'Weight'}
-        ];
-        this.uiCon = uiCon;
-        this.userApi = new APIService();
+  constructor() {
+    this.uiCon = new UIController(this);
+    this.paginate = new PaginationController();
+    this.userApi = new APIService();
+    this.sortBtnState = 0;
+  }
+
+  updateInitailValues() {
+    this.uiCon.populateIniatialValues();
+  }
+
+  async filterUsers(form) {
+    const roleFilter = form.rolefilter.value;
+    const ageFilter = form.agefilter.value;
+    const genderFilter = form.genderfilter.value;
+    const bloodGroupFilter = form.bloodgroupfilter.value;
+
+    try {
+      if (
+        roleFilter == 0 &&
+        ageFilter == 20 &&
+        genderFilter == 0 &&
+        bloodGroupFilter == 0
+      ) {
+        throw new Error("No Feilds were selected");
+      }
+
+      if (roleFilter != 0) {
+        const filteredUsers = await this.userApi.filterUsers("role",roleFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
+        this.uiCon.populateUsersTable(filteredUsers);
+        return;
+      }
+      if (ageFilter > 20) {
+        const filteredUsers = await this.userApi.filterUsers("age", ageFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
+        this.uiCon.populateUsersTable(filteredUsers);
+        return;
+      }
+      if (bloodGroupFilter != 0) {
+        const filteredUsers = await this.userApi.filterUsers("bloodGroup",bloodGroupFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
+        this.uiCon.populateUsersTable(filteredUsers);
+        return;
+      }
+      if (genderFilter != 0) {
+        const filteredUsers = await this.userApi.filterUsers("gender",genderFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
+        this.uiCon.populateUsersTable(filteredUsers);
+        return;
+      }
+    } catch (e) {
+      UIController.displayMessage(e.message, "error");
     }
+  }
 
-    updateInitailValues(){
-        this.uiCon.setDropDown(this.filterTags, 'filter');
-        this.uiCon.setDropDown(this.sortTags, 'sort');
-        this.uiCon.setTableHeadings();
+  displayNoresultsFoundIfTotalZero(filteredUsers) {
+    if (filteredUsers.total === 0) {
+      UIController.displayMessage("No results found", "message");
     }
+  }
 
-
-    async searchSortUser(form){
-        
-        const sortValue = form.sortselect.value;
-        const filterSelect = form.filterselect.value;
-        const searchBox = form.search.value;
-   
-       try{
-        if(sortValue==0 && filterSelect==0 && !searchBox){
-            throw new Error("No Feilds were selected");
-        }
-
-        if(filterSelect !=0 && searchBox){
-            const filteredUsers = await this.userApi.filterUsers(filterSelect, searchBox);
-            if(filteredUsers.total ===0){
-                UIController.displayMessage("No results found", 'message');
-            }
-            this.uiCon.populateUsersTable(filteredUsers.users);
-            return;
-        }
-
-        if(sortValue != 0){
-            const order = form.sorttoggle.checked ? 'asc' : 'desc';
-            const sortedUsers = await this.userApi.sortUsers(sortValue, order);
-            if(sortedUsers.total === 0){
-                UIController.displayMessage("No results found", 'message');
-            }
-            this.uiCon.populateUsersTable(sortedUsers.users);
-            return;
-        }
-        }
-        catch(e){
-            UIController.displayMessage(e.message,'error');
-        }
-    }   
-
-    async searchUserByName(name){
-        try{
-            const users = await this.userApi.searchUser(name);
-            if(users.total == 0){
-                UIController.displayMessage("No results found", 'message');
-            }
-            this.uiCon.populateUsersTable(users.users);
-            return;
-        }
-        catch(e){
-            UIController.displayMessage(e.message,'message')
-        }
+  async searchUserByName(name) {
+    try {
+      const users = await this.userApi.searchUser(name.trim());
+      if (users.total === 0) {
+        UIController.displayMessage("No results found", "message");
+      }
+      this.uiCon.populateUsersTable(users);
+      return;
+    } catch (e) {
+      UIController.displayMessage(e.message, "message");
     }
+  }
 
-    async displayAllUsers(){
-        try{
-        const allusers = await this.userApi.getAllUsers();
-        this.uiCon.populateUsersTable(allusers.users);
-        }
-        catch(e){
-            UIController.displayMessage(e.message,'message')
-        }
+  async displayAllUsers() {
+    this.uiCon.setResultsHeading("All Users");
+    try {
+      console.log(this.paginate.limit, this.paginate.skip);
+      const users = await this.userApi.getUsers(this.paginate.limit, this.paginate.skip);
+      const allusers = await this.userApi.getAllUsers();
+      this.uiCon.populateUsersTable(allusers);
+    } catch (e) {
+      UIController.displayMessage(e.message, "message");
     }
-}
+  }
 
-
-class APIService{
-    constructor(){
-        this.baseURL = 'https://dummyjson.com/users';
-    }
-    
-    async tryFetchingData(url){
-        try {
-            const response = await fetch(url,{ method: 'GET'});
-            if(!response.ok){
-                throw new Error("Unable to Fetch");
-            }
-            return response.json();
-        }
-        catch(e){
-            throw e;
-        }
-    }
-
-    async getAllUsers(){
-        return await this.tryFetchingData(`${this.baseURL}`);
-    }
-
-    
-    async sortUsers(value, order){
-        return await this.tryFetchingData(`${this.baseURL}?sortBy=${value}&order=${order}`);
-    }
-    
-    async filterUsers(filter, value){
-        return await this.tryFetchingData(`${this.baseURL}/filter?key=${filter}&value=${value}`)
-    }
-    
-    
-    async searchUser(user){
-        return this.tryFetchingData(`${this.baseURL}/search?q=${user}`);
-    }
-
-    async deleteUser(userId){
-        try {
-            const response = await fetch(`${this.baseURL}/${userId}`, {
-                method: 'DELETE',
-            })
-            if(!response.ok){
-                throw new Error("Unable to delete User");
-            }
-            return response.json();
-        }
-        catch(e){
-            throw e;
-        }
-    }
-}
-
-
-class UIController {
-    constructor() {
-        this.tableHeadings = [
-            {id :"Id"}, 
-            {firstName :"First Name"}, 
-            {lastName:"Last Name"},
-            {age:'Age'},
-            {gender:'Gender'},
-            {birthDate:'Date of Birth'},
-            {bloodGroup : "Blood Group"},
-            {height:"Height"},
-            {weight:"Weight"},
-            {role:"Role"},
-            {action:"Action"}
-        ];
-        this.userApi=new APIService();
-    }
-
-    setDropDown(tags, type){
-        const dropDown = document.getElementById(`${type}select`);
-        tags.forEach(tag => {
-            const option = document.createElement("option");
-            option.value = Object.keys(tag)[0]; 
-            option.textContent = Object.values(tag);
-            dropDown.appendChild(option);
-        });
-    }
-
-    setTableHeadings(){
-        const tableHead = document.querySelector("#users-tb thead");
-        tableHead.textContent = "";
-        const row = document.createElement("tr");
-        this.tableHeadings.forEach(heading =>{
-            const td = document.createElement('td');
-            td.textContent = Object.values(heading);
-            row.appendChild(td);
-        })
-        tableHead.appendChild(row);
-    }   
-    
-    populateUsersTable(users){
-        const usersTable = document.querySelector("#users-tb tbody");
-        usersTable.textContent = " "; 
-        const domFrag = document.createDocumentFragment();
-
-        users.forEach(user => {
-            const row = document.createElement('tr');
-                for(let key in user){
-                    if(this.includesTableHeading(key)){
-                        const cell = document.createElement('td');
-                        cell.textContent = user[key];
-                        row.appendChild(cell);
-                    }
-                }
-                const butcell = document.createElement("td");
-                const delBtn = this.createButton(`Remove`);
-                butcell.appendChild(delBtn);
-                row.appendChild(butcell);
-                delBtn.onclick = async () => {
-                    if(await this.tryDeletingUser(user)){
-                        usersTable.removeChild(row);
-                    }
-                }
-                domFrag.appendChild(row); 
-        });
-
-        usersTable.appendChild(domFrag);
-    }
-
-    async tryDeletingUser(user) {
-        const result = await this.getUserConfirmation(`delete ${user.firstName}`);
-        if (result) {
-            try{
-                const deletedUser = await this.userApi.deleteUser(user.id);
-                UIController.displayMessage(`User ${deletedUser.firstName} deleted`, 'message');
-                return true;
-            }
-            catch(e){
-                UIController.displayMessage(e.message,'message');
-            }
-        }
-    }
-
-    includesTableHeading(key){
-        return this.tableHeadings.find(a => 
-            Object.keys(a)[0].toLowerCase() === key.toLowerCase()
+  async tryDeletingUser(user) {
+    const result = await this.uiCon.getUserConfirmation(
+      `delete ${user.firstName}`
+    );
+    if (result) {
+      try {
+        const deletedUser = await this.userApi.deleteUser(user.id);
+        UIController.displayMessage(
+          `User ${deletedUser.firstName} deleted`,
+          "message"
         );
+        return true;
+      } catch (e) {
+        UIController.displayMessage(e.message, "message");
+      }
     }
+  }
 
-    
+  async trySortingData(sortValue) {
+    if (this.sortBtnState >= 2) {
+      this.sortBtnState = 0;
+      this.displayAllUsers();
+      return;
+    }
+    if (sortValue == "name") {
+      sortValue = "firstName";
+    }
+    const sortBtnValues = ["asc", "desc"];
+    const sortedUsers = await this.userApi.sortUsers(
+      sortValue,
+      sortBtnValues[this.sortBtnState]
+    );
+    this.uiCon.setResultsHeading(
+      `Sorted based on ${sortValue} in ${
+        sortBtnValues[this.sortBtnState]
+      } order`
+    );
+    this.uiCon.populateUsersTable(sortedUsers);
+    this.sortBtnState++;
+  }
 
-    
-    
-    createButton(textContent){
-        const btn = document.createElement('button');
-        btn.className = "icon-btn";
-        btn.textContent = textContent;
-        return btn;
-    }
-    
-    getUserConfirmation(context) {
-        this.showConfirmationBlock(true);
-        document.getElementById('confirm-title').textContent = `Are you sure to ${context}?`;
-        
-        return new Promise((resolve) => {
-            document.getElementById('yesbtn').onclick = () => {
-                this.showConfirmationBlock(false);
-                resolve(true);
-            };
-            document.getElementById('nobtn').onclick = () => {
-                this.showConfirmationBlock(false);
-                resolve(false);
-            };
-        });
-    }
-    
-    showConfirmationBlock(value){
-        const confirm = document.getElementById('confirmation');
-        if(value){
-            confirm.classList.remove("hidden");
-            return;
-        }
-        confirm.classList.add("hidden");
-    }
-
-    static displayMessage(message,type){
-        const errorDiv =  document.getElementById(`${type}p`);
-        errorDiv.textContent = message;
-        setTimeout(function(){errorDiv.textContent = ""}, 3000);//
-    }
+  async tryEditingUser(user) {}
 }
