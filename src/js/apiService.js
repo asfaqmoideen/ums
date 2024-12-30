@@ -35,6 +35,10 @@ export class APIService {
     return this.tryFetchingData(`${this.baseURL}/search?q=${user}`);
   }
 
+  async getUsers(limit, skip){
+    return await this.tryFetchingData(`${this.baseURL}?limit=${limit}&skip=${skip}`)
+  }
+
   async deleteUser(userId) {
     try {
       const response = await fetch(`${this.baseURL}/${userId}`, {

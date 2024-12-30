@@ -28,15 +28,15 @@
   </head>
   <body>
     <aside class="aside">
-      <!-- <div class="sideheader">
-            <h2>Main Menu</h2>
-        </div>
-        <ul>
-            <li>Users Management</li>
-            <li>Todo</li>
-            <li>Social Seed</li>
-            <li>Profile</li>
-        </ul> -->
+      <div class="sideheader">
+        <h3>UMS</h3>
+      </div>
+      <ul>
+        <li>Users Management</li>
+        <li>Todo</li>
+        <li>Social Seed</li>
+        <li>Profile</li>
+      </ul>
     </aside>
     <div class="main-content">
       <header>
@@ -52,7 +52,10 @@
       <main>
         <div class="container">
           <div class="headgrp">
-            <h3 id="main-cont-title">All Users</h3>
+            <div class="formgroup">
+              <h3 id="main-cont-title">All Users</h3>
+              <p id="noofresults"></p>
+            </div>
             <p id="messagep"></p>
             <div class="btngroup">
               <button
@@ -60,11 +63,13 @@
                 id="clearall"
                 class="icon-btn clear-btn fa-solid fa-rotate-right hidden"
               ></button>
-              <select id="noofusers">
-                <option value="5" selected>5</option>
-                <option value="10">10</option>
+              <label for="noofusers" class="noofusers">Showing </label>
+              <select id="noofusers" class="noofusers">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
                 <option value="15">15</option>
               </select>
+              <label for="noofusers" class="noofusers">Results</label>
               <button
                 type="button"
                 class="icon-btn fa-solid fa-sliders"
@@ -82,29 +87,26 @@
               <thead></thead>
               <tbody></tbody>
             </table>
-          </div>
-          <div id="paginate-div" class="formgroup">
-            <button
+            <div id="paginate-div" class="formgroup">
+              <button
               type="button"
               id="first-btn"
               class="icon-btn fa-solid fa-angles-left"
-            ></button>
-            <button
+              ></button>
+              <button
               type="button"
               id="prev-btn"
               class="icon-btn fa-solid fa-angle-left"
-            ></button>
-            <span id="pagenumber">1</span>
-            <button
-              type="button"
-              id="next-btn"
-              class="icon-btn fa-solid fa-angle-right"
-            ></button>
-            <button
+              ></button>
+              <span id="pagenumber">1</span>
+              <button type="button" id="next-btn" class="icon-btn fa-solid fa-angle-right"
+              ></button>
+              <button
               type="button"
               id="last-btn"
               class="icon-btn fa-solid fa-angles-right"
-            ></button>
+              ></button>
+            </div>
           </div>
         </div>
         <div class="filterbar hidden" id="filtermenu">

@@ -109,19 +109,18 @@ select {
 table {
   width: 100%;
   border-collapse: collapse;
-  text-align: center;
 }
 
 .table-container {
-  height: calc(100vh - 12.5rem);
+  height: calc(100vh - 11rem);
   overflow-y: auto;
-  border-bottom: solid gray 1px;
 }
 
 table thead {
   background: linear-gradient(to right, #48c6ef 0%, #8da2f0 100%);
   color: white;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .filterbar form {
@@ -191,4 +190,9 @@ p {
   border: none;
   background: none;
   color: inherit;
+}
+#noofresults,
+.noofusers {
+  font-size: small;
+  opacity: 0.5;
 }

@@ -70,7 +70,6 @@ export class UIController {
   }
 
   populateUsersTable(usersObj) {
-    this.paginate.setPages(usersObj.total);
     const usersTable = document.querySelector("#users-tb tbody");
     usersTable.textContent = " ";
     const domFrag = document.createDocumentFragment();
@@ -95,6 +94,12 @@ export class UIController {
 
   setResultsHeading(content) {
     document.getElementById("main-cont-title").textContent = content;
+  }
+
+  setTotalResults(users) {
+    document.getElementById(
+      "noofresults"
+    ).textContent = `Total Results : ${users}`;
   }
 }
 
@@ -243,39 +248,43 @@ class TableService {
   }
 }
 
-class PaginationController {
+export class PaginationController {
   constructor() {
     this.currentPage = 1;
     this.maxPage = 0;
-    this.usersperpage = 5;
+    this.usersperpage = document.getElementById("noofusers").value;
+    this.limit = 0;
+    this.skip = 0;
+    this.firstBtn = document.getElementById("first-btn");
+    this.nextBtn = document.getElementById("next-btn");
+    this.lastBtn = document.getElementById("last-btn");
+    this.prevBtn = document.getElementById("prev-btn");
     this.setEventListeners();
   }
 
   setEventListeners() {
-    document.getElementById("first-btn").addEventListener("click", () => {
+    this.firstBtn.addEventListener("click", () => {
       this.currentPage = 1;
       this.setPageNumber();
-      console.log(this.currentPage);
     });
-    document.getElementById("next-btn").addEventListener("click", () => {
+    this.nextBtn.addEventListener("click", () => {
       this.currentPage++;
       this.setPageNumber();
-      console.log(this.currentPage);
     });
-    document.getElementById("prev-btn").addEventListener("click", () => {
+    this.prevBtn.addEventListener("click", () => {
       this.currentPage--;
       this.setPageNumber();
-      console.log(this.currentPage);
     });
-    document.getElementById("last-btn").addEventListener("click", () => {
+    this.lastBtn.addEventListener("click", () => {
       this.currentPage = this.maxPage;
       this.setPageNumber();
-      console.log(this.currentPage);
     });
     document.getElementById("noofusers").addEventListener("change", (event) => {
       this.usersperpage = event.target.value;
-      console.log(this.usersperpage);
     });
+
+    this.setLimit();
+    this.setSkip();
   }
 
   setPages(totalUsers) {
@@ -288,5 +297,30 @@ class PaginationController {
 
   setPageNumber() {
     document.getElementById("pagenumber").textContent = this.currentPage;
+    this.checkFirtLastPage();
+    this.setLimit();
+    this.setSkip();
+  }
+
+  checkFirtLastPage() {
+    this.firstBtn.disabled = false;
+    this.lastBtn.disabled = false;
+    this.nextBtn.disabled = false;
+    this.prevBtn.disabled = false;
+    if (this.currentPage === 1) {
+      this.firstBtn.disabled = true;
+      this.prevBtn.disabled = true;
+    } else if (this.currentPage === this.maxPage) {
+      this.nextBtn.disabled = true;
+      this.lastBtn.disabled = true;
+    }
+  }
+
+  setLimit() {
+    this.limit = this.usersperpage;
+  }
+
+  setSkip() {
+    this.skip = this.usersperpage * (this.currentPage - 1);
   }
 }

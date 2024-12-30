@@ -1,7 +1,7 @@
 "use strict";
 import { APIService } from "./apiService";
 import { UIController } from "./uiController";
-
+import { PaginationController } from "./uiController";
 document.addEventListener("DOMContentLoaded", () => {
   const directCon = new DirectoryController();
 
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 class DirectoryController {
   constructor() {
     this.uiCon = new UIController(this);
+    this.paginate = new PaginationController();
     this.userApi = new APIService();
     this.sortBtnState = 0;
   }
@@ -71,48 +72,37 @@ class DirectoryController {
       }
 
       if (roleFilter != 0) {
-        const filteredUsers = await this.userApi.filterUsers(
-          "role",
-          roleFilter
-        );
-        if (filteredUsers.total === 0) {
-          UIController.displayMessage("No results found", "message");
-        }
+        const filteredUsers = await this.userApi.filterUsers("role",roleFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (ageFilter > 20) {
         const filteredUsers = await this.userApi.filterUsers("age", ageFilter);
-        if (filteredUsers.total === 0) {
-          UIController.displayMessage("No results found", "message");
-        }
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (bloodGroupFilter != 0) {
-        const filteredUsers = await this.userApi.filterUsers(
-          "bloodGroup",
-          bloodGroupFilter
-        );
-        if (filteredUsers.total === 0) {
-          UIController.displayMessage("No results found", "message");
-        }
+        const filteredUsers = await this.userApi.filterUsers("bloodGroup",bloodGroupFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (genderFilter != 0) {
-        const filteredUsers = await this.userApi.filterUsers(
-          "gender",
-          genderFilter
-        );
-        if (filteredUsers.total === 0) {
-          UIController.displayMessage("No results found", "message");
-        }
+        const filteredUsers = await this.userApi.filterUsers("gender",genderFilter);
+        this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
     } catch (e) {
       UIController.displayMessage(e.message, "error");
+    }
+  }
+
+  displayNoresultsFoundIfTotalZero(filteredUsers) {
+    if (filteredUsers.total === 0) {
+      UIController.displayMessage("No results found", "message");
     }
   }
 
@@ -132,12 +122,15 @@ class DirectoryController {
   async displayAllUsers() {
     this.uiCon.setResultsHeading("All Users");
     try {
+      console.log(this.paginate.limit, this.paginate.skip);
+      const users = await this.userApi.getUsers(this.paginate.limit, this.paginate.skip);
       const allusers = await this.userApi.getAllUsers();
       this.uiCon.populateUsersTable(allusers);
     } catch (e) {
       UIController.displayMessage(e.message, "message");
     }
   }
+
   async tryDeletingUser(user) {
     const result = await this.uiCon.getUserConfirmation(
       `delete ${user.firstName}`
