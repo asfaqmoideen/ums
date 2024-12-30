@@ -16,7 +16,7 @@ class UserLogic {
             console.error("Error during fetch:", error);
             throw error;
         }
-    }
+    }   
 
     async addUser(userData) {
         const url = `${this.baseURL}/add`;
@@ -36,7 +36,7 @@ class UserLogic {
             body: JSON.stringify(updatedData),
         };
         return await this.fetchData(url, options);
-}
+    }
 
 }
 

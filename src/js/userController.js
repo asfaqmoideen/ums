@@ -41,6 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("agefilter").addEventListener("change", (event) => {
     document.getElementById("agefilterspan").textContent = event.target.value;
   });
+
+  const formHeading = document.getElementById('form-heading');
+  const addBtn = document.getElementById("addUser");
+  const submit = document.getElementById("user-form");
+
+  addBtn.addEventListener("click", () => {
+    formHeading.textContent = 'Add User';  
+    submit.reset(); 
+  });
+  submit.addEventListener("submit", async (event) => {
+  event.preventDefault();
+    directCon.tryCollectingFormData(formHeading);
+  });
 });
 
 class DirectoryController {
@@ -49,11 +62,40 @@ class DirectoryController {
     this.paginate = new PaginationController();
     this.userApi = new APIService();
     this.sortBtnState = 0;
+    this.currentUserId ;
   }
 
   updateInitailValues() {
     this.uiCon.populateIniatialValues();
   }
+  async tryAddingUser(userData) {
+    try {
+        const addedUser = await this.userApi.addUser(userData);
+        console.log("newuser", addedUser);
+        UIController.displayMessage( "User Added Successfully!")
+    } catch (error) {
+        UIController.displayMessage(error, 'message')
+    }
+}
+
+  async tryUpdatingUser(user) {
+    try {
+        const updatedUser = await this.userApi.updateUser(this.currentUserId, user);
+        console.log("updated", updatedUser);
+        UIController.displayMessage( "User Updated Successfully")
+    } catch (error) {
+        UIController.displayMessage(error, 'message')
+    }
+}
+   async tryCollectingFormData(formHeading){
+    const formID = document.getElementById("user-form");
+      const userData = this.uiCon.collectFormData(formID); 
+      if (formHeading.textContent === 'Add User') {
+        await this.tryAddingUser(userData);
+    } else if (formHeading.textContent === 'Update User') {
+        await this.tryUpdatingUser(userData);
+    }
+   }
 
   async filterUsers(form) {
     const roleFilter = form.rolefilter.value;
@@ -171,6 +213,4 @@ class DirectoryController {
     this.uiCon.populateUsersTable(sortedUsers);
     this.sortBtnState++;
   }
-
-  async tryEditingUser(user) {}
 }

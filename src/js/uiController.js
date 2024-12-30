@@ -101,6 +101,27 @@ export class UIController {
       "noofresults"
     ).textContent = `Total Results : ${users}`;
   }
+
+  populateForm(userData) {
+    const form = document.getElementById('user-form');
+    for (const [key, value] of Object.entries(userData)) {
+        const input = form.querySelector(`[name="${key}"]`);
+        if (input) {
+            if (input.type === 'date') {
+                const formattedDate = new Date(value).toISOString().split('T')[0];
+                input.value = formattedDate;
+            } else if (input.tagName === 'SELECT') {
+                input.value = value;
+            } else {
+                input.value = value || '';
+            }
+        }
+    }
+  }
+  collectFormData(form) {
+    const formData = new FormData(form);
+    return Object.fromEntries(formData.entries());
+}
 }
 
 class TableService {
@@ -175,17 +196,23 @@ class TableService {
   createNameEmailDiv() {
     const nameEmail = document.createElement("div");
     nameEmail.className = "nameEmail";
-    const name = document.createElement("p");
-    name.textContent = `${this.superKeyValues[0]} ${this.superKeyValues[1]}`;
-    nameEmail.appendChild(name);
-
-    const email = document.createElement("p");
-    email.textContent = this.superKeyValues[2];
-    email.className = "userEmail";
-    nameEmail.appendChild(email);
+    nameEmail.appendChild(this.createNameTag());
+    nameEmail.appendChild(this.createEmailTag());
     return nameEmail;
   }
 
+  createNameTag(){
+    const name = document.createElement("p");
+    name.textContent = `${this.superKeyValues[0]} ${this.superKeyValues[1]}`;
+    return name;
+  }
+
+  createEmailTag(){
+    const email = document.createElement("p");
+    email.textContent = this.superKeyValues[2];
+    email.className = "userEmail";
+    return email;
+  }
   createUserImage() {
     const image = document.createElement("img");
     image.src = this.superKeyValues[3];
@@ -203,39 +230,43 @@ class TableService {
     const actionCell = document.createElement("td");
     const actionDiv = document.createElement("div");
     actionDiv.className = "btn-wrap";
-    const editBtn = this.createButton([
-      "icon-btn",
-      "fa-solid",
-      "fa-user-pen",
-      "edit",
-    ]);
-    const delBtn = this.createButton([
-      "icon-btn",
-      "fa-solid",
-      "fa-trash-can",
-      "del",
-    ]);
-    actionDiv.appendChild(editBtn);
-    actionDiv.appendChild(delBtn);
-    delBtn.onclick = async () => {
-      if (await this.uiCon.directCon.tryDeletingUser(user)) {
-        usersTable.removeChild(row);
-      }
-    };
-    editBtn.onclick = async () => {
-      if (await this.uiCon.directCon.tryEditingUser(user)) {
-      }
-    };
+    
+    actionDiv.appendChild(this.configureEditButton(user));
+    actionDiv.appendChild(this.configureDeleteButton(user, usersTable, row));
+
     actionCell.appendChild(actionDiv);
     return actionCell;
   }
 
   createButton(classList) {
     const btn = document.createElement("button");
-    btn.classList.add(classList[0], classList[1], classList[2], classList[3]);
+    classList.forEach((className) => {
+      btn.classList.add(className);
+    })
     return btn;
   }
 
+  configureEditButton(user){
+    const editBtn = this.createButton(["icon-btn","fa-solid","fa-user-pen","edit",]); 
+    editBtn.setAttribute("data-bs-toggle", "modal");
+    editBtn.setAttribute("data-bs-target", "#addUserModal");
+    editBtn.onclick = async () => {
+      document.getElementById('form-heading').textContent = "Update User";
+      this.uiCon.directCon.currentUserId = user.id;
+      this.uiCon.populateForm(user);
+    };
+    return editBtn;
+  }
+
+  configureDeleteButton(user, usersTable, row){
+    const delBtn = this.createButton(["icon-btn","fa-solid","fa-trash-can","del",]);
+    delBtn.onclick = async () => {
+      if (await this.uiCon.directCon.tryDeletingUser(user)) {
+        usersTable.removeChild(row);
+      }
+    };
+    return delBtn;
+  }
   createCheckBox(row) {
     const cell = document.createElement("td");
     const btn = document.createElement("input");

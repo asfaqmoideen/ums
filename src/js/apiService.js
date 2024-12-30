@@ -39,6 +39,40 @@ export class APIService {
     return await this.tryFetchingData(`${this.baseURL}?limit=${limit}&skip=${skip}`)
   }
 
+  async addUser(userData) {
+    const url = `${this.baseURL}/add`;
+    const options = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+    };
+    return await this.fetchData(url, options);
+  }
+
+  async updateUser(userId, updatedData) {
+    const url = `${this.baseURL}/${userId}`;
+    console.log(`${this.baseURL}/${userId}`);
+    const options = {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedData),
+    };
+    return await this.fetchData(url, options);
+  }
+
+  async fetchData(url, options = {}) {
+    console.log(url, options);
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            throw new Error(`Request failed with status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error during fetch:", error);
+        throw error;
+    }
+  }
   async deleteUser(userId) {
     try {
       const response = await fetch(`${this.baseURL}/${userId}`, {
