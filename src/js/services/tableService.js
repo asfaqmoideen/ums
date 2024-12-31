@@ -1,17 +1,7 @@
+import { tableHeadings } from "../constants";
+import { superKeys } from "../constants";
 export class TableService {
     constructor(uiCon) {
-      this.tableHeadings = [
-        { name: "Name" },
-        { age: "Age" },
-        { gender: "Gender" },
-        { birthDate: "Date of Birth" },
-        { bloodGroup: "Blood Group" },
-        { height: "Height" },
-        { weight: "Weight" },
-        { role: "Role" },
-        { action: "Action" },
-      ];
-      this.superKeys = ["firstName", "lastName", "email", "image"];
       this.superKeyValues = [];
       this.uiCon = uiCon;
     }
@@ -22,7 +12,7 @@ export class TableService {
   
       row.appendChild(this.createCheckBox());
   
-      this.tableHeadings.forEach((heading) => {
+      tableHeadings.forEach((heading) => {
         const td = document.createElement("td");
         td.textContent = Object.values(heading);
         td.onclick = async () => {
@@ -35,7 +25,7 @@ export class TableService {
   
     populateSuperCell(user, row) {
       for (let key in user) {
-        if (this.superKeys.includes(key)) {
+        if (superKeys.includes(key)) {
           this.superKeyValues.push(user[key]);
         } else if (this.superKeyValues.length > 3) {
           row.appendChild(this.createSuperCell(key, user));
@@ -95,7 +85,7 @@ export class TableService {
     }
   
     includesTableHeading(key) {
-      return this.tableHeadings.find(
+      return tableHeadings.find(
         (a) => Object.keys(a)[0].toLowerCase() === key.toLowerCase()
       );
     }

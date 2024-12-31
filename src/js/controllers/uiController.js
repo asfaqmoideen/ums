@@ -1,29 +1,20 @@
 import { TableService } from "../services/tableService";
 import { PaginationController } from "./paginationController";
+import { filterBloodGroups } from "../constants";
+import { filterGender } from "../constants"; 
+import { filterRoles } from "../constants";
 
 export class UIController {
   constructor(directCon) {
     this.directCon = directCon;
     this.tableService = new TableService(this);
     this.paginate = new PaginationController();
-    this.filterRoles = [{ moderator: "Moderator" }, { user: "User" }];
-    this.filterBloodGroups = [
-      { "A+": "A+" },
-      { "A-": "A-" },
-      { "B+": "B+" },
-      { "B-": "B-" },
-      { "AB+": "AB+" },
-      { "AB-": "AB-" },
-      { "O+": "O+" },
-      { "O-": "O-" },
-    ];
-    this.filterGender = [{ male: "Male" }, { female: "Female" }];
   }
 
   populateIniatialValues() {
-    this.setDropDown(this.filterRoles, "role");
-    this.setDropDown(this.filterBloodGroups, "bloodgroup");
-    this.setDropDown(this.filterGender, "gender");
+    this.setDropDown(filterRoles, "role");
+    this.setDropDown(filterBloodGroups, "bloodgroup");
+    this.setDropDown(filterGender, "gender");
     this.tableService.setTableHeadings();
   }
 
