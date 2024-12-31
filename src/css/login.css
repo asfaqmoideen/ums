@@ -1,0 +1,57 @@
+.login-image {
+  height: 100%;
+  width: 100%;
+}
+
+.w-max {
+  width: max-content !important;
+}
+.footer {
+  background-color: #222;
+  color: rgba(255, 255, 255, 0.473);
+}
+
+.header {
+  height: 50px;
+}
+
+.error-box {
+  height: 40px;
+}
+.mob-bg {
+  z-index: -100;
+}
+.lang-wrap {
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+}
+.lang-wrap:hover {
+  text-decoration: underline;
+}
+.contact-icons {
+  color: #26db3e;
+  margin-right: 15px;
+  font-size: 25px;
+}
+.social-icon {
+  color: rgba(255, 255, 255, 0.473);
+  margin-right: 15px;
+  font-size: 25px;
+}
+.brand {
+  color: #26db3e;
+}
+.quick-links a {
+  margin-bottom: 0.8rem;
+}
+.create-user {
+  color: #a7a7a7;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.createu {
+  color: #0044ff;
+}

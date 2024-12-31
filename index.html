@@ -1,216 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Management</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-      crossorigin="anonymous"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MakeMeDo Login</title>
+  <link rel="stylesheet" href="./src/css/login.css">
+  <script src="https://kit.fontawesome.com/6514f15526.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-    <script type="module" src="/src/js/controllers/userController.js"></script>
-    <link rel="stylesheet" href="/src/css/user.css" />
-  </head>
-  <body>
-    <aside class="aside">
-      <div class="sideheader">
-        <h3>UMS</h3>
+    defer
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+</head>
+
+<body class="bg-light  ">
+  <div class="container-fluid h-100 p-0">
+    <main class=" d-flex vh-100 py-5 justify-content-center mx-auto" style="width: 800px;">
+      <div class=" my-auto" style="width: 450px; height: fit-content;">
+        <h2 class="fs-1 brand">MakeMeDo</h2>
+        <p class="fs-4">MakeMeDo helps you take notes track ideas and get things done easily</p>
       </div>
-      <ul>
-        <li>Users Management</li>
-        <li>Todo</li>
-        <li>Social Seed</li>
-        <li>Profile</li>
-      </ul>
-    </aside>
-    <div class="main-content">
-      <header>
-        <h1>User Management</h1>
-        <div>
-          <input
-            type="text"
-            id="searchbox"
-            placeholder="Search users by name"
-          />
-        </div>
-      </header>
-      <main>
-        <div class="container">
-          <div class="headgrp">
-            <div class="formgroup">
-              <h3 id="main-cont-title">All Users</h3>
-              <p id="noofresults"></p>
-            </div>
-            <p id="messagep"></p>
-            <div class="btngroup">
-              <button
-                type="button"
-                id="clearall"
-                class="icon-btn clear-btn fa-solid fa-rotate-right hidden"
-              ></button>
-              <label for="noofusers" class="noofusers">Showing </label>
-              <select id="noofusers" class="noofusers">
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="15">15</option>
-              </select>
-              <label for="noofusers" class="noofusers">Results</label>
-              <button
-                type="button"
-                class="icon-btn fa-solid fa-sliders"
-                id="applyFilter"
-              ></button>
-              <button
-                type="button"
-                id="addUser"
-                class="icon-btn fa-solid fa-user-plus"
-                data-bs-toggle="modal" data-bs-target="#addUserModal"
-              ></button>
-            </div>
+      <div class=" d-flex my-auto" style="width: 350px; ">
+        <form id="login-form" class="bg-white shadow-sm p-4 rounded w-100" style="height : fit-content;
+">
+          <h3 class="fs-4  pt-4">Login to your account</h3>
+          <div class="form-group mt-3 position-relative " style="padding-bottom: 21px;">
+            <label for="uname" class="form-label">Username</label>
+            <input type="text" id="uname" name="uname" placeholder="Enter your username" class="form-control w-100 "
+              required>
+
+            <div id="uname-err" class="invalid-feedback position-absolute bottom-0 left-0">Required field!</div>
+
           </div>
-          <div class="table-responsive table-container">
-            <table id="users-tb" class="table">
-              <thead></thead>
-              <tbody></tbody>
-            </table>
-            <div id="paginate-div" class="formgroup">
-              <button
-              type="button"
-              id="first-btn"
-              class="icon-btn fa-solid fa-angles-left"
-              ></button>
-              <button
-              type="button"
-              id="prev-btn"
-              class="icon-btn fa-solid fa-angle-left"
-              ></button>
-              <span id="pagenumber">1</span>
-              <button type="button" id="next-btn" class="icon-btn fa-solid fa-angle-right"
-              ></button>
-              <button
-              type="button"
-              id="last-btn"
-              class="icon-btn fa-solid fa-angles-right"
-              ></button>
-            </div>
+          <div class="form-group mt-1 position-relative" style="padding-bottom: 21px;">
+            <label for=" password" class="form-label">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password"
+              class="form-control w-100" required>
+            <div id="pass-err" class="invalid-feedback position-absolute bottom-0 left-0">Required field!</div>
           </div>
-        </div>
-        <div class="filterbar hidden" id="filtermenu">
-          <div class="headgrp">
-            <h5>Filter Options</h5>
-            <button type="button" id="filterclosebtn" class="icon-btn">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
+          <button type="submit" class="btn w-100 my-2 text-white" style="background-color: #333;">LOGIN</button>
+          <p class="create-user">Don't have an account? <a class="createu">Create new user</a></p>
+          <div id="error"
+            class="text-danger text-center fs-6 fs-md-2 error-box d-flex align-items-center justify-content-center">
           </div>
-          <form id="filterform">
-            <div class="formgroup">
-              <label for="agefilter">Select Age</label>
-              <span id="agefilterspan">20</span>
-              <input type="range" min="20" max="60" value="20" id="agefilter" />
-            </div>
-            <div class="formgroup">
-              <select id="rolefilter">
-                <option value="0">-Role-</option>
-              </select>
-              <select id="bloodgroupfilter">
-                <option value="0">-BloodGroup-</option>
-              </select>
-              <select id="genderfilter">
-                <option value="0">-Gender-</option>
-              </select>
-            </div>
-            <p id="errorp" class="error"></p>
-            <button type="submit" class="btn-primary" id="results">
-              Show Results
-            </button>
-          </form>
-        </div>
-        <div class="container-confirmation hidden" id="confirmation">
-          <p id="confirm-title"></p>
-          <div class="btn-wrap">
-            <button type="button" id="yesbtn">Yes</button>
-            <button type="button" id="nobtn">No</button>
-          </div>
-        </div>
-        <div class="modal fade " id="addUserModal" tabindex="-1" >
-          <div class="modal-dialog modal-xl">
-              <div class="modal-content w-100 ">
-                  <div class="modal-header">
-                      <h5  id="form-heading" class="modal-title w-100 text-center">Add User</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" ></button>
-                  </div>
-                  <div class="modal-body py-0">
-                      <form id="user-form" class="row g-3" >
-                          <div class="col-md-6">
-                              <label for="firstName" class="form-label">First Name</label>
-                              <input type="text" id="firstName" name="firstName" class="form-control">
-                          </div>
-                          <div class="col-md-6">
-                              <label for="lastName" class="form-label">Last Name</label>
-                              <input type="text" id="lastName" name="lastName" class="form-control" >
-                          </div>
-                          <div class="col-md-6">
-                              <label for="age" class="form-label">Age</label>
-                              <input type="number" id="age" name="age" class="form-control">
-                          </div>
-                          <div class="col-md-6">
-                              <label for="gender" class="form-label">Gender</label>
-                              <select id="gender" name="gender" class="form-select" >
-                                  <option value="" disabled selected>Select your gender</option>
-                                  <option value="male">Male</option>
-                                  <option value="female">Female</option>
-                                  <option value="not_preferred">Prefer Not to Say</option>
-                              </select>
-                          </div>
-                          <div class="col-md-12">
-                              <label for="email" class="form-label">E-mail</label>
-                              <input type="email" id="email" name="email" class="form-control" >
-                          </div>
-                          
-                          <div class="col-md-6">
-                              <label for="username" class="form-label">Username</label>
-                              <input type="text" id="username" name="username" class="form-control" >
-                          </div>
-                          <div class="col-md-6">
-                              <label for="password" class="form-label">Password</label>
-                              <input type="password" id="password" name="password" class="form-control" >
-                          </div>
-                          <div class="col-md-6">
-                              <label for="phone" class="form-label">Mobile No</label>
-                              <input type="text" id="phone" name="phone" class="form-control" >
-                          </div>
-                          <div class="col-md-6">
-                              <label for="birthDate" class="form-label">Birth Date</label>
-                              <input type="date" id="birthDate" name="birthDate" class="form-control" required >
-                          </div>
-                          <div class="col-md-2 mx-auto pb-2">
-                                  <button type="submit" class="btn btn-primary w-100" >Submit</button>
-                          </div>
-                      </form>
-                      
-                  </div>
+        </form>
+      </div>
+
+    </main>
+    <footer class="footer px-5">
+      <div class=" mx-auto py-4 d-flex w-100 justify-content-between">
+        <div class="" style="width: 250px;">
+
+          <div>
+            <h2 class="fs-2 text-white">Contact us</h2>
+            <div class="" style="padding: 16px 0px;">
+              <p><i class="fa-solid fa-paper-plane contact-icons"></i>santhoshkumar@gmail.com</p>
+              <p><i class="fa-solid fa-square-phone contact-icons"></i>+91 8754753470</p>
+              <div class="social-icons">
+                <a href="www.facebook.com"><i class="fa-brands fa-facebook social-icon"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter-square social-icon"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram social-icon"></i></a>
+                <a href="#"><i class="fa-brands fa-linkedin social-icon"></i></a>
               </div>
+            </div>
+
           </div>
+
+          <p class="mb-0  fs-md-6 " style="font-size: 0.8rem;">Copyright 2024 The Company.</p>
+        </div>
+        <div class="d-flex flex-column">
+          <div class="quick-links">
+            <h2 class="fs-2 text-white">Quick Links</h2>
+            <div class="d-flex flex-column" style="padding: 16px 0px;">
+              <a>Services</a>
+              <a>About us</a>
+              <a>Privacy Policies</a>
+              <a>Terms and Conditions</a>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="" style="width: 250px;">
+          <h2 class="fs-2 text-white">Our Mission</h2>
+          <p>We help you save your time and invest it wisely.</p>
+        </div>
+
       </div>
-      </main>
-      <footer>
-        <p>Copyrights @ User Management System 2025</p>
-      </footer>
-    </div>
-  </body>
+      <div class="d-flex justify-content-center pb-3 pt-1">
+
+        <a class="lang-wrap">English(US)</a>
+        <a class="lang-wrap mx-3">English(UK)</a>
+      </div>
+    </footer>
+  </div>
+
+  </div>
+  <script type="module" src="./src/js/controllers/loginController.js"></script>
+
+</body>
+
 </html>
