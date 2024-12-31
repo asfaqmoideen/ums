@@ -1,7 +1,7 @@
 "use strict";
-import { APIService } from "./apiService";
+import { APIService } from "../services/apiService";
 import { UIController } from "./uiController";
-import { PaginationController } from "./uiController";
+import { PaginationController } from "./paginationController";
 document.addEventListener("DOMContentLoaded", () => {
   const directCon = new DirectoryController();
 
