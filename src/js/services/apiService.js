@@ -73,6 +73,7 @@ export class APIService {
         throw error;
     }
   }
+  
   async deleteUser(userId) {
     try {
       const response = await fetch(`${this.baseURL}/${userId}`, {
