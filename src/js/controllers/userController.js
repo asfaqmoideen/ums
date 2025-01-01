@@ -3,8 +3,39 @@ import { APIService } from "../services/apiService";
 import { UIController } from "./uiController";
 import { PaginationController } from "./paginationController";
 document.addEventListener("DOMContentLoaded", () => {
+  const accessToken = sessionStorage.getItem("accessToken");
+  const getcurrentUser = async () => {
+    if (!accessToken) {
+      document.location = "/";
+      return
+    }
+    try {
+      const response = await fetch('https://dummyjson.com/auth/me', {
+        method: "GET",
+        headers: {
+          "Authorization": accessToken,
+        },
+      })
+      if (response.status === 401) {
+        document.location = "/";
+        sessionStorage.removeItem('accessToken')
+        return
+      }
+      if (response.status !== 200) {
+        throw new Error("Could not fetch data");
+      }
+      const jsonData = await response.json();
+      sessionStorage.setItem("user", JSON.stringify(jsonData))
+    } catch (err) {
+      console.log("Err :", err)
+    }
+  };
+  getcurrentUser()
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    sessionStorage.removeItem("accessToken");
+    document.location = "/"
+  })
   const directCon = new DirectoryController();
-
   directCon.updateInitailValues();
   directCon.displayAllUsers();
 
@@ -47,11 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const submit = document.getElementById("user-form");
 
   addBtn.addEventListener("click", () => {
-    formHeading.textContent = 'Add User';  
-    submit.reset(); 
+    formHeading.textContent = 'Add User';
+    submit.reset();
   });
   submit.addEventListener("submit", async (event) => {
-  event.preventDefault();
+    event.preventDefault();
     directCon.tryCollectingFormData(formHeading);
   });
 });
@@ -62,7 +93,7 @@ class DirectoryController {
     this.paginate = new PaginationController();
     this.userApi = new APIService();
     this.sortBtnState = 0;
-    this.currentUserId ;
+    this.currentUserId;
   }
 
   updateInitailValues() {
@@ -70,32 +101,32 @@ class DirectoryController {
   }
   async tryAddingUser(userData) {
     try {
-        const addedUser = await this.userApi.addUser(userData);
-        console.log("newuser", addedUser);
-        UIController.displayMessage( "User Added Successfully!")
+      const addedUser = await this.userApi.addUser(userData);
+      console.log("newuser", addedUser);
+      UIController.displayMessage("User Added Successfully!")
     } catch (error) {
-        UIController.displayMessage(error, 'message')
+      UIController.displayMessage(error, 'message')
     }
-}
+  }
 
   async tryUpdatingUser(user) {
     try {
-        const updatedUser = await this.userApi.updateUser(this.currentUserId, user);
-        console.log("updated", updatedUser);
-        UIController.displayMessage( "User Updated Successfully")
+      const updatedUser = await this.userApi.updateUser(this.currentUserId, user);
+      console.log("updated", updatedUser);
+      UIController.displayMessage("User Updated Successfully")
     } catch (error) {
-        UIController.displayMessage(error, 'message')
+      UIController.displayMessage(error, 'message')
     }
-}
-   async tryCollectingFormData(formHeading){
+  }
+  async tryCollectingFormData(formHeading) {
     const formID = document.getElementById("user-form");
-      const userData = this.uiCon.collectFormData(formID); 
-      if (formHeading.textContent === 'Add User') {
-        await this.tryAddingUser(userData);
+    const userData = this.uiCon.collectFormData(formID);
+    if (formHeading.textContent === 'Add User') {
+      await this.tryAddingUser(userData);
     } else if (formHeading.textContent === 'Update User') {
-        await this.tryUpdatingUser(userData);
+      await this.tryUpdatingUser(userData);
     }
-   }
+  }
 
   async filterUsers(form) {
     const roleFilter = form.rolefilter.value;
@@ -114,7 +145,7 @@ class DirectoryController {
       }
 
       if (roleFilter != 0) {
-        const filteredUsers = await this.userApi.filterUsers("role",roleFilter);
+        const filteredUsers = await this.userApi.filterUsers("role", roleFilter);
         this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
@@ -126,13 +157,13 @@ class DirectoryController {
         return;
       }
       if (bloodGroupFilter != 0) {
-        const filteredUsers = await this.userApi.filterUsers("bloodGroup",bloodGroupFilter);
+        const filteredUsers = await this.userApi.filterUsers("bloodGroup", bloodGroupFilter);
         this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
       }
       if (genderFilter != 0) {
-        const filteredUsers = await this.userApi.filterUsers("gender",genderFilter);
+        const filteredUsers = await this.userApi.filterUsers("gender", genderFilter);
         this.displayNoresultsFoundIfTotalZero(filteredUsers);
         this.uiCon.populateUsersTable(filteredUsers);
         return;
@@ -206,8 +237,7 @@ class DirectoryController {
       sortBtnValues[this.sortBtnState]
     );
     this.uiCon.setResultsHeading(
-      `Sorted based on ${sortValue} in ${
-        sortBtnValues[this.sortBtnState]
+      `Sorted based on ${sortValue} in ${sortBtnValues[this.sortBtnState]
       } order`
     );
     this.uiCon.populateUsersTable(sortedUsers);
