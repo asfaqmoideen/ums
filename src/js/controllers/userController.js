@@ -2,10 +2,13 @@
 import { APIService } from "../services/apiService";
 import { UIController } from "./uiController";
 import { PaginationController } from "./paginationController";
+import { AccessValidationService } from "../services/AccessValidationService";
+import { UserConfirmationService } from "../services/UserConfirmationService";
+
 document.addEventListener("DOMContentLoaded", () => {
   const accessToken = sessionStorage.getItem("accessToken");
 
-  const accessCon = new AccessController();
+  const accessCon = new AccessValidationService();
   accessCon.validateCurrentUser(accessToken)
 
   const directCon = new DirectoryController();
@@ -59,10 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
     directCon.tryCollectingFormData(formHeading);
   });
 
-  document.getElementById('logout-btn').addEventListener('click', () => {
-    sessionStorage.removeItem("accessToken");
-    document.location = "/"
-  })
+  document.getElementById('logout-btn').addEventListener('click', async() => {
+    directCon.trylogout();
+  });
 });
 
 class DirectoryController {
@@ -70,10 +72,21 @@ class DirectoryController {
     this.uiCon = new UIController(this);
     this.paginate = new PaginationController();
     this.userApi = new APIService();
+    this.confirmuser = new UserConfirmationService();
     this.sortBtnState = 0;
     this.currentUserId;
   }
 
+  async trylogout() {
+    const result = await this.confirmuser.getUserConfirmation(
+      `logout`
+    );
+    if (result) {
+         sessionStorage.removeItem("accessToken");
+          document.location = "/"
+    }
+
+  }
   updateInitailValues() {
     this.uiCon.populateIniatialValues();
   }
@@ -183,7 +196,7 @@ class DirectoryController {
   }
 
   async tryDeletingUser(user) {
-    const result = await this.uiCon.getUserConfirmation(
+    const result = await this.confirmuser.getUserConfirmation(
       `delete ${user.firstName}`
     );
     if (result) {
@@ -223,31 +236,3 @@ class DirectoryController {
   }
 }
 
-class AccessController{
-  validateCurrentUser = async (accessToken) => {
-    if (!accessToken) {
-      document.location = "/";
-      return
-    }
-    try {
-      const response = await fetch('https://dummyjson.com/auth/me', {
-        method: "GET",
-        headers: {
-          "Authorization": accessToken,
-        },
-      })
-      if (response.status === 401) {
-        document.location = "/";
-        sessionStorage.removeItem('accessToken')
-        return
-      }
-      if (response.status !== 200) {
-        throw new Error("Could not fetch data");
-      }
-      const jsonData = await response.json();
-      sessionStorage.setItem("user", JSON.stringify(jsonData))
-    } catch (err) {
-      console.log("Err :", err)
-    }
-  };
-}
