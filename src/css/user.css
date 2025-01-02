@@ -19,12 +19,14 @@ body {
 .sideheader {
   margin-top: 1rem;
 }
+
 .aside ul {
   list-style: none;
   width: 100%;
   padding: 0;
   margin: 0;
 }
+
 .aside li {
   text-align: center;
   text-decoration: none;
@@ -32,6 +34,12 @@ body {
   font-size: 1rem;
   cursor: pointer;
 }
+
+.aside li a {
+  text-decoration: none;
+  color: white;
+}
+
 .aside li:hover {
   background-color: black;
 }
@@ -50,9 +58,11 @@ main {
 .container {
   flex: 1;
 }
+
 .container h3 {
   font-size: 1.5rem;
 }
+
 header {
   display: flex;
   justify-content: space-between;
@@ -60,6 +70,7 @@ header {
   background: linear-gradient(to right, #48c6ef 0%, #6f86d6 100%);
   padding: 0.5rem;
 }
+
 header h1 {
   color: #fff;
 }
@@ -136,6 +147,7 @@ table thead {
   justify-content: space-around;
   flex-wrap: wrap;
 }
+
 .formgroup {
   gap: 1rem;
 }
@@ -153,9 +165,11 @@ table thead {
 .admin {
   color: palevioletred;
 }
+
 .moderator {
   color: goldenrod;
 }
+
 .user {
   color: #6f86d6;
 }
@@ -163,25 +177,31 @@ table thead {
 p {
   margin: 0;
 }
+
 .hidden {
   display: none;
 }
+
 .userImage {
   height: 2rem;
   width: 2rem;
 }
+
 .superCell {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
+
 .userEmail {
   font-size: 0.8rem;
   opacity: 0.5;
 }
+
 .nameEmail {
   text-align: start;
 }
+
 .selected {
   background-color: rgb(133, 216, 133);
 }
@@ -191,6 +211,7 @@ p {
   background: none;
   color: inherit;
 }
+
 #noofresults,
 .noofusers {
   font-size: small;
